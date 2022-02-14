@@ -5,7 +5,7 @@ a notebook running on the same cluster as the pipelines backend.
 
 **Precondition:** You created your Notebook with the "Allow access to Kubeflow
 Pipelines" option checked. if you have never heard about this before, please
-check the [docs on notebook configuration](../notebooks/notebook-instance.md#configurations)
+check the [docs on notebook configuration](../notebooks/configuration.md#configurations)
 
 ## Connecting to the KF Pipelines API server
 
