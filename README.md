@@ -1,2 +1,16 @@
-# docs
+# ML Platform
+
 Documentation for platform users
+
+## Onboarding
+
+-   [initial setup](./initialization/account.md)
+
+## Notebooks
+
+-   [launching a notebook](./notebooks/configuration.md)
+-   [customization](./notebooks/customization.md)
+
+## Pipelines
+
+-   [pipelines from within a notebook](./pipelines/notebook-access.md)
