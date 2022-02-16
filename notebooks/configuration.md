@@ -66,10 +66,11 @@ Volumes can have different read/write modes. Read the
 
 -   Type `New`: A new persistent volume will be created. Select this option
     If you have not created a workspace volume yet (e.g. via the volumes 
-    dashboard). In this case, you can choose an arbitrary name. **Attention:**
-    if you create a new volume here, this will always be an EBS volume which
-    does not support the "ReadWriteMany" access type. Configuring a new
-    volume with this access type will result in your notebook not being
+    dashboard). In this case, you can choose an arbitrary name. 
+    
+    **Attention:** if you create a new volume here, this will always be an EBS 
+    volume which does not support the "ReadWriteMany" access type. Configuring
+    a new volume with this access type will result in your notebook not being
     launched correctly
     
 -   Type `Existing`: The notebook tries to mount an existing volume with 
