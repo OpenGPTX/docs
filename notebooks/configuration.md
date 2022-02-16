@@ -1,10 +1,13 @@
 # Notebook configuration
 
+The following sections walk you through the configuration form for creating
+a new notebook server.
+
 ## 1. Provide a name and select a namespace
 
 ![name and namespace](/img/notebooks/name.png)
 
--   name: Give your Notebook Server a name to identify it in the list of 
+-   **name**: Give your Notebook Server a name to identify it in the list of 
     Notebook Servers later.
 -   namespace: This will be automatically filled with your personal 
     namespace. It indicates in which context the Notebook Server will be
@@ -38,7 +41,8 @@ don’t use more than one core so it does not make sense to create a notebook
 with more than 1 CPU. Only pick more than 1 CPU if you know that you can/
 have to leverage multi-core parallelization.
 
-The amount of memory required has to be estimated per use case.
+The amount of memory required has to be estimated per use case. Currently
+instances can have up to 30 CPU cores and 120 GB of RAM.
 
 ## 4. Gain superpowers with GPUs
 
@@ -55,26 +59,18 @@ the section about tolerations.
 The workspace volume is the home directory of your working environment.
 You can either create a new volume, attach an existing volume or opt out
 of creating a persistent storage. The size of a new volume is configurable.
-Volumes can have different read/write modes:
-
--   ReadWriteOnce: The volume can be mounted to exactly one notebook server
-    which has read and write access.
-
--   ReadOnlyMany: The volume can be mounted to several notebooks (or pods
-    in general). All notebooks can read data, none can write. you might
-    want to prepopulate it with useful data.
-
--   ReadWriteMany: The volume can be mounted, read and written by multiple
-    notebooks or pods. This is especially useful if many users work on the
-    same data or if you run pipelines which perform parallel tasks on the 
-    same data. You can also have a ReadWriteOnce workspace volume and mount
-    a ReadWriteMany volume in addtion (see data volumes)
+Volumes can have different read/write modes. Read the
+[docs on volumes](../volumes/volumes.md) for more information.
 
 **Creating new volumes vs using existing volumes**
 
 -   Type `New`: A new persistent volume will be created. Select this option
     If you have not created a workspace volume yet (e.g. via the volumes 
-    dashboard). In this case, you can choose an arbitrary name.
+    dashboard). In this case, you can choose an arbitrary name. **Attention:**
+    if you create a new volume here, this will always be an EBS volume which
+    does not support the "ReadWriteMany" access type. Configuring a new
+    volume with this access type will result in your notebook not being
+    launched correctly
     
 -   Type `Existing`: The notebook tries to mount an existing volume with 
     the name you provided. Be careful to spell the volume right.Otherwhise 
@@ -87,6 +83,16 @@ Volumes can have different read/write modes:
 If you check the checkbox labeled "Don't use Persistent Storage for User's
 home", you will have a home directory to store data. However, this data
 will be lost when you stop your notebook or when it is forcefully stopped.
+
+**Best Practices**
+
+-   create volumes using the volumes component and attach existing volumes to
+    the notebooks
+-   always use EFS volumes
+-   always use ReadWriteMany
+-   Select "Don't use persistent storage" and just attach Data Volumes
+
+To learn about volume creation, continue [here](../volumes/volumes.md)
 
 ## 6. Data Volumes
 
