@@ -27,6 +27,7 @@ You can choose between EBS Volumes and EFS Volumes. The options `None` and `gp2`
 
 -   EBS Volume: Block Store with a fixed size. New volumes will be provisioned
     when they are attached to a notebook (or any pod) for the first time.
+    
     **Attention:** although you can select "ReadManyOnly" and "ReadWriteMany"
     access modes, EBS only supports "ReadWriteOnce". if you select anything
     else and use the volume with e.g. with a notebook, your notebook will not
@@ -38,7 +39,9 @@ You can choose between EBS Volumes and EFS Volumes. The options `None` and `gp2`
 ### Access mode
 
 -   ReadWriteOnce: The volume can be mounted to exactly one notebook server
-    which has read and write access. **Attention:** if you try to attach 
+    which has read and write access. 
+    
+    **Attention:** if you try to attach 
     "ReadWriteOnce" volume to a new notebook, make sure it is not attached to
     any other pod like another notebook or also the file browser! otherwhise
     your notebook will not start.
