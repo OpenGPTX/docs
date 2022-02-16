@@ -25,7 +25,7 @@ You can (and should) create Volumes independent of the Notebook servers and
 attach them later. It is best practice to create an EFS Volume in the Volumes
 tab and attach it to the new notebook server.
 
-Find further details [here](../volumes/configuration.md)
+Find further details [here](../volumes/volumes.md).
 
 ## Experiments (KFP) and Pipelines
 
