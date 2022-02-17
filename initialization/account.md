@@ -14,4 +14,3 @@
 
 -   For an overview of the available components, continue reading [here](../initialization/components.md)
 -   To learn how to launch notebook servers, continue [here](../notebooks/configuration.md)
-
