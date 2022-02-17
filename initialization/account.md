@@ -9,3 +9,8 @@
 6.   You should be redirected to the setup page. ![create namespace view](/img/initialization/welcome.png) Click on `Start Setup`
 7.   Accept the proposed name or enter a new name for your namespace and click on `Finish`
 8.   You should now see the Kubeflow Dashboard. You are ready to rumble! ![namespace view](/img/initialization/kubeflow-dashboard.png). 
+
+**Next steps**
+
+-   For an overview of the available components, continue reading [here](../initialization/components.md)
+-   To learn how to launch notebook servers, continue [here](../notebooks/configuration.md)

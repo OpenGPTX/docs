@@ -5,6 +5,11 @@ Documentation for platform users
 ## Onboarding
 
 -   [initial setup](./initialization/account.md)
+-   [platform components](./initialization/components.md)
+
+## Volumes
+
+-   [create a new volume](./volumes/volumes.md)
 
 ## Notebooks
 
