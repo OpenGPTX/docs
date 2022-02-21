@@ -34,3 +34,10 @@ spec:
               expirationSeconds: 7200
               path: token
 ```
+
+1.  Save the snippet above to a file (e.g. pipelines-access.yaml) and configure
+    the `namespace` field corecctly.
+
+2.  make sure kubeconfig points to the right cluster
+
+3.  run `kubectl apply -f pipelines-access.yaml`
