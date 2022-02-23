@@ -19,3 +19,7 @@ Documentation for platform users
 ## Pipelines
 
 -   [pipelines from within a notebook](./pipelines/notebook-access.md)
+
+## Limitations
+
+-   [enable pipelines access from notebook](./limitations/pipelines-access.md)
