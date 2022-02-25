@@ -45,7 +45,7 @@
 
 9.  You should now see the Kubeflow Dashboard. You are ready to rumble!
 
-    ![namespace view](/img/initialization/kubeflow-dashboard.png). 
+    ![namespace view](/img/initialization/kubeflow-dashboard.png)
 
 ## Next steps
 
