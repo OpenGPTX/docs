@@ -20,6 +20,10 @@ Documentation for platform users
 
 -   [pipelines from within a notebook](./pipelines/notebook-access.md)
 
+## Guides
+
+-   [Data Engineering](./guides/data-engineering.md)
+
 ## Limitations
 
 -   [enable pipelines access from notebook](./limitations/pipelines-access.md)
