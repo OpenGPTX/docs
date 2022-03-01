@@ -20,6 +20,10 @@ Documentation for platform users
 
 -   [pipelines from within a notebook](./pipelines/notebook-access.md)
 
+## Data storage
+
+-   [Object store](./data-storage/object-store.md)
+
 ## Guides
 
 -   [Data Engineering](./guides/data-engineering.md)
