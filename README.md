@@ -20,6 +20,14 @@ Documentation for platform users
 
 -   [pipelines from within a notebook](./pipelines/notebook-access.md)
 
+## Data storage
+
+-   [Object store](./data-storage/object-store.md)
+
+## Guides
+
+-   [Data Engineering](./guides/data-engineering.md)
+
 ## Limitations
 
 -   [enable pipelines access from notebook](./limitations/pipelines-access.md)
