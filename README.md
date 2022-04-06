@@ -16,6 +16,11 @@ Documentation for platform users
 -   [launching a notebook](./notebooks/configuration.md)
 -   [customization](./notebooks/customization.md)
 
+## Spark
+
+-   [Setup](./notebooks/applications/spark/README.md)
+-   [Example Notebook](./notebooks/applications/spark/notebooks/pyspark_example.ipynb)
+
 ## Pipelines
 
 -   [pipelines from within a notebook](./pipelines/notebook-access.md)
