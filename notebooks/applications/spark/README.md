@@ -11,65 +11,30 @@ Steps to create a notebook server are found [here](https://github.com/KubeSoup/d
 2. Choose one of the below listed images as `Custom Image` as per the requirements.
 
     ```
-    public.ecr.aws/atcommons/notebook-servers/jupyter-spark:13867
+    public.ecr.aws/atcommons/notebook-servers/jupyter-spark:13867 #@Salil: your new image version is needed
     public.ecr.aws/atcommons/notebook-servers/jupyter-spark-scipy:13867
     public.ecr.aws/atcommons/notebook-servers/jupyter-spark-pytorch-full:13867
     public.ecr.aws/atcommons/notebook-servers/jupyter-spark-pytorch-full:cuda-13867
     ```
 3. Choose at least 2 CPU cores and 4GB RAM for spark to function properly. If you intend to load bring large subsets onto the notebooks, more RAM is adviced. 
 
-4. Create istio and svc preperation manually (workaround for the time being - will be automated soon)
+4. Create a Spark Session: 
 
-    Please use the same naming, otherwise it would lead to a missconfiguration.
-
-    Let's asume:
-    - your notebook name (you created in the previous step) is "sparknotebook"
-  
-    In your notebook (JupyterLab): -> File -> New Launcher -> Terminal
-
-    Executed the following two commands:
-
-    **WARNING:** Executing the two commands will cause a one-time restart of the notebook instance
-
-    Command 1:
-    ```
-    cat <<EOF | kubectl apply -f -
-    apiVersion: v1
-    kind: Service
-    metadata:
-      name: sparknotebook-spark
-    spec:
-      selector:
-        notebook-name: sparknotebook
-      ports:
-        - name: driver
-          protocol: TCP
-          port: 2222
-          targetPort: 2222
-        - name: blockmanager
-          protocol: TCP
-          port: 7078
-          targetPort: 7078
-      type: ClusterIP
-    EOF
-    ```
-
-    Command 2:
-    ```
-    kubectl patch StatefulSet sparknotebook --type='json' -p='[{"op":"add","path":"/spec/template/metadata/annotations","value":{}},{"op":"add","path":"/spec/template/metadata/annotations/traffic.sidecar.istio.io~1excludeInboundPorts","value": "7078"}]'
-    ```
-
-5. Create a Spark Session: 
     ```python
     import os
     os.environ["JAVA_HOME"] = "/usr/lib/jvm/default-java"
     os.environ['PYSPARK_SUBMIT_ARGS'] = '--packages "io.delta:delta-core_2.12:1.1.0,org.apache.hadoop:hadoop-aws:3.3.1" pyspark-shell'
-
+    
     import pyspark
     from delta import configure_spark_with_delta_pip
-
+    
     namespace = "user-name" # usually "firstname-lastname"
-
+    #@Salil: ensure that the following lines are possible (s6-part). naming can be different.
+    namespace = os.environ.get('NAMESPACE')
+    notebook_name = os.environ.get('NOTEBOOK_NAME')
+    !echo $namespace
+    !echo $notebook_name
+    
     builder = (
         pyspark.sql.SparkSession.builder.appName(f"{namespace}-spark-app")
         .master("k8s://https://kubernetes.default")
@@ -103,13 +68,13 @@ Steps to create a notebook server are found [here](https://github.com/KubeSoup/d
         # They need to be in the same zone
         .config("spark.kubernetes.node.selector.topology.ebs.csi.aws.com/zone", "eu-central-1a") # node selector
         .config("spark.kubernetes.node.selector.plural.sh/scalingGroup", "xlarge-mem-optimized-on-demand") # node selector, read "Node Groups for the Spark Executors"
-        .config("spark.driver.host", f"sparknotebook-spark.{namespace}.svc.cluster.local")
+        .config("spark.driver.host", f"{notebook_name}.{namespace}.svc.cluster.local")
         .config("spark.executor.instances", "2") # number of Executors
         .config("spark.executor.memory", "3g") # Executor memory
         .config("spark.executor.cores", "1") # Executor cores 
         .config("spark.sql.catalog.spark_catalog", "org.apache.spark.sql.delta.catalog.DeltaCatalog")
     )
-
+    
     spark = configure_spark_with_delta_pip(builder).getOrCreate()
     ```
 
@@ -118,11 +83,13 @@ Steps to create a notebook server are found [here](https://github.com/KubeSoup/d
       - [Running on Kubernetes Configuration](https://spark.apache.org/docs/latest/running-on-kubernetes.html#configuration) - attirbutes specific to kubernetes
       - [Spark Integration with Amazon Web Services](https://hadoop.apache.org/docs/stable/hadoop-aws/tools/hadoop-aws/index.html) - attributes to configuring access to S3 and other AWS related services
 
+
 ## Optional: Verification of Modifications:
 
 Run the following commands, where the expected output is shown.
 
-1. `kubectl get svc sparknotebook-spark -o yaml`:
+1. `kubectl get svc $NOTEBOOK_NAME -o yaml`: @Salil please make sure that the env works as expected (s6-part)
+    
     ```
     spec:
       ports:
@@ -134,9 +101,16 @@ Run the following commands, where the expected output is shown.
         port: 7078
         protocol: TCP
         targetPort: 7078
+      - name: spark-ui
+        port: 4040
+        protocol: TCP
+        targetPort: 4040
     ```
-
-2. `kubectl get StatefulSet sparknotebook -o yaml`:
+    
+    If it is not the case, try to delete the svc one time `kubectl delete svc $NOTEBOOK_NAME` (you will loose the connection to the notebook for a while - refresh the page).
+    
+2. `kubectl get StatefulSet $NOTEBOOK_NAME -o yaml`:
+    
     ```
     spec:
       template:
