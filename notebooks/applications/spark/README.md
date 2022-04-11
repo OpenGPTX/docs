@@ -16,44 +16,26 @@ Steps to create a notebook server are found [here](https://github.com/KubeSoup/d
     public.ecr.aws/atcommons/notebook-servers/jupyter-spark-pytorch-full:13867
     public.ecr.aws/atcommons/notebook-servers/jupyter-spark-pytorch-full:cuda-13867
     ```
-3. Choose at least 2 CPU cores and 4GB RAM for spark to function properly. If you intend to load bring large subsets onto the notebooks, more RAM is adviced. 
+3. Choose at least 2 CPU cores and 4GB RAM for spark to function properly. If you intend to load bring large subsets onto the notebooks, more RAM is adviced.
 
-4. Create a Spark Session: 
+4. Create a Spark Session:
 
     ```python
     import os
     os.environ["JAVA_HOME"] = "/usr/lib/jvm/default-java"
     os.environ['PYSPARK_SUBMIT_ARGS'] = '--packages "io.delta:delta-core_2.12:1.1.0,org.apache.hadoop:hadoop-aws:3.3.1" pyspark-shell'
-    
+
     import pyspark
     from delta import configure_spark_with_delta_pip
-    
+
     namespace = "user-name" # usually "firstname-lastname"
-    #@Salil: ensure that the following lines are possible (s6-part). naming can be different.
-    namespace = os.environ.get('NAMESPACE')
-    notebook_name = os.environ.get('NOTEBOOK_NAME')
-    !echo $namespace
-    !echo $notebook_name
-    
+
     builder = (
         pyspark.sql.SparkSession.builder.appName(f"{namespace}-spark-app")
-        .master("k8s://https://kubernetes.default")
-        .config("spark.kubernetes.namespace", namespace)
-        .config("spark.sql.extensions", "io.delta.sql.DeltaSparkSessionExtension")
-        .config("spark.hadoop.fs.s3a.impl", "org.apache.hadoop.fs.s3a.S3AFileSystem")
         .config("fs.s3a.aws.credentials.provider", "com.amazonaws.auth.WebIdentityTokenCredentialsProvider") # Either use built in authentication for S3
         # or a custom one with specific S3 Access and Secret Keys below
         # .config("spark.hadoop.fs.s3a.access.key", os.environ['AWS_S3_ACCESS_KEY']) # optional
         # .config("spark.hadoop.fs.s3a.secret.key", os.environ['AWS_S3_SECRET_KEY']) # optional
-        .config("spark.kubernetes.authenticate.driver.serviceAccountName", "default-editor")
-        .config("spark.kubernetes.container.image.pullPolicy", "Always")
-        .config("spark.kubernetes.container.image", "public.ecr.aws/atcommons/spark/python:latest")
-        .config("spark.driver.bindAddress", "0.0.0.0")
-        .config("spark.driver.port", "2222")
-        .config("spark.driver.blockManager.port", "7078")
-        .config("spark.blockManager.port", "7079")
-        .config("spark.kubernetes.executor.annotation.traffic.sidecar.istio.io/excludeOutboundPorts", "7078")
-        .config("spark.kubernetes.executor.annotation.traffic.sidecar.istio.io/excludeInboundPorts", "7079")
         # The section with `spark.kubernetes.executor.volumes.persistentVolumeClaim` is for
         # specifying the usage of a local volume to enable more storage space for Disk Spilling
         # If not need, just completely remove the properties
@@ -68,15 +50,15 @@ Steps to create a notebook server are found [here](https://github.com/KubeSoup/d
         # They need to be in the same zone
         .config("spark.kubernetes.node.selector.topology.ebs.csi.aws.com/zone", "eu-central-1a") # node selector
         .config("spark.kubernetes.node.selector.plural.sh/scalingGroup", "xlarge-mem-optimized-on-demand") # node selector, read "Node Groups for the Spark Executors"
-        .config("spark.driver.host", f"{notebook_name}.{namespace}.svc.cluster.local")
         .config("spark.executor.instances", "2") # number of Executors
         .config("spark.executor.memory", "3g") # Executor memory
-        .config("spark.executor.cores", "1") # Executor cores 
-        .config("spark.sql.catalog.spark_catalog", "org.apache.spark.sql.delta.catalog.DeltaCatalog")
+        .config("spark.executor.cores", "1") # Executor cores
     )
-    
+
     spark = configure_spark_with_delta_pip(builder).getOrCreate()
     ```
+
+    The default configuration for spark and environment variables are found in `/home/jovyan/spark/conf`
 
     A reference for the above used configuration can be found on the following links:
       - [Spark Configuration](https://spark.apache.org/docs/latest/configuration.html#spark-configuration) - general attributes
@@ -88,8 +70,8 @@ Steps to create a notebook server are found [here](https://github.com/KubeSoup/d
 
 Run the following commands, where the expected output is shown.
 
-1. `kubectl get svc $NOTEBOOK_NAME -o yaml`: @Salil please make sure that the env works as expected (s6-part)
-    
+1. `kubectl get svc $NOTEBOOK_NAME -o yaml`:
+
     ```
     spec:
       ports:
@@ -106,11 +88,11 @@ Run the following commands, where the expected output is shown.
         protocol: TCP
         targetPort: 4040
     ```
-    
+
     If it is not the case, try to delete the svc one time `kubectl delete svc $NOTEBOOK_NAME` (you will loose the connection to the notebook for a while - refresh the page).
-    
+
 2. `kubectl get StatefulSet $NOTEBOOK_NAME -o yaml`:
-    
+
     ```
     spec:
       template:
@@ -122,9 +104,9 @@ Run the following commands, where the expected output is shown.
 
 ## Node Groups for the Spark Executors
 
-Depending on the task, one might have different resources to get the job done. For example, there are jobs where more memory is required, or others that need more computational power, i.e. CPUs. We provide the following node groups that can be defined using the `spark.kubernetes.node.selector.plural.sh/scalingGroup` configuration property. 
+Depending on the task, one might have different resources to get the job done. For example, there are jobs where more memory is required, or others that need more computational power, i.e. CPUs. We provide the following node groups that can be defined using the `spark.kubernetes.node.selector.plural.sh/scalingGroup` configuration property.
 
-**IMPORTANT NOTE**: Only a subset of the instances is available to the executors due to infrastructure overhead. So, only a few GBs should be requested by executors. For example, if we want to run four executors on a single `xlarge-mem-optimized-on-demand` instance, we should request 6GB per executor. Requesting 8GB would put each executor on a separate instance, which is very cost inefficcient. 
+**IMPORTANT NOTE**: Only a subset of the instances is available to the executors due to infrastructure overhead. So, only a few GBs should be requested by executors. For example, if we want to run four executors on a single `xlarge-mem-optimized-on-demand` instance, we should request 6GB per executor. Requesting 8GB would put each executor on a separate instance, which is very cost inefficcient.
 
 | Group                               | Demand Type | Instances                                                | Cores | RAM (GB) | Local NVMe Storage (GB) |
 |-------------------------------------|-------------|----------------------------------------------------------|-------|----------|-------------------------|
