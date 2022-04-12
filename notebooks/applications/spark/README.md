@@ -6,17 +6,17 @@ This doc outlines the steps necessary to setup Spark with Delta Lake on Kubeflow
 
 Steps to create a notebook server are found [here](https://github.com/KubeSoup/docs/blob/main/notebooks/configuration.md), but consider:
 
-1. Create notebook server whose **name must be: `sparknotebook`**
+1. Create notebook server
 
 2. Choose one of the below listed images as `Custom Image` as per the requirements.
 
     ```
-    public.ecr.aws/atcommons/notebook-servers/jupyter-spark:13867 #@Salil: your new image version is needed
-    public.ecr.aws/atcommons/notebook-servers/jupyter-spark-scipy:13867
-    public.ecr.aws/atcommons/notebook-servers/jupyter-spark-pytorch-full:13867
-    public.ecr.aws/atcommons/notebook-servers/jupyter-spark-pytorch-full:cuda-13867
+    public.ecr.aws/atcommons/notebook-servers/jupyter-spark:14350
+    public.ecr.aws/atcommons/notebook-servers/jupyter-spark-scipy:14350
+    public.ecr.aws/atcommons/notebook-servers/jupyter-spark-pytorch-full:14350
+    public.ecr.aws/atcommons/notebook-servers/jupyter-spark-pytorch-full:cuda-14350
     ```
-3. Choose at least 2 CPU cores and 4GB RAM for spark to function properly. If you intend to load bring large subsets onto the notebooks, more RAM is adviced.
+3. Choose at least 2 CPU cores and 8GB RAM for spark to function properly. If you intend to load bring large subsets onto the notebooks, more RAM is adviced.
 
 4. Create a Spark Session:
 
@@ -28,7 +28,8 @@ Steps to create a notebook server are found [here](https://github.com/KubeSoup/d
     import pyspark
     from delta import configure_spark_with_delta_pip
 
-    namespace = "user-name" # usually "firstname-lastname"
+    namespace = os.environ["NAMESPACE"] # usually "firstname-lastname"
+    notebook_name = os.environ["NOTEBOOK_NAME"] # might be helpful
 
     builder = (
         pyspark.sql.SparkSession.builder.appName(f"{namespace}-spark-app")
@@ -36,6 +37,7 @@ Steps to create a notebook server are found [here](https://github.com/KubeSoup/d
         # or a custom one with specific S3 Access and Secret Keys below
         # .config("spark.hadoop.fs.s3a.access.key", os.environ['AWS_S3_ACCESS_KEY']) # optional
         # .config("spark.hadoop.fs.s3a.secret.key", os.environ['AWS_S3_SECRET_KEY']) # optional
+        # .config("spark.kubernetes.container.image", "public.ecr.aws/atcommons/spark/python:latest")
         # The section with `spark.kubernetes.executor.volumes.persistentVolumeClaim` is for
         # specifying the usage of a local volume to enable more storage space for Disk Spilling
         # If not need, just completely remove the properties
@@ -58,7 +60,30 @@ Steps to create a notebook server are found [here](https://github.com/KubeSoup/d
     spark = configure_spark_with_delta_pip(builder).getOrCreate()
     ```
 
-    The default configuration for spark and environment variables are found in `/home/jovyan/spark/conf`
+    The default configuration for spark and environment variables are found in `/opt/spark/conf`
+      - `spark-defaults.conf`: contains Spark configurations which you want to set as default, each line consists of a key and a value separated by whitespace. The configuration can be overriden if the same key is set in your Spark Session.
+      - `spark-env.sh`: certain Spark settings can be configured through environment variables. We use it to set some dynamic variables in default config (like setting up namespace).
+
+    ```
+      # default config
+      spark.master                                                                          k8s://https://kubernetes.default
+      spark.sql.extensions                                                                  io.delta.sql.DeltaSparkSessionExtension
+      spark.sql.catalog.spark_catalog                                                       org.apache.spark.sql.delta.catalog.DeltaCatalog
+      spark.hadoop.fs.s3a.impl                                                              org.apache.hadoop.fs.s3a.S3AFileSystem
+      spark.driver.bindAddress                                                              0.0.0.0
+      spark.driver.port                                                                     2222
+      spark.driver.blockManager.port                                                        7078
+      spark.blockManager.port                                                               7079
+      spark.kubernetes.container.image.pullPolicy                                           Always
+      spark.kubernetes.container.image                                                      public.ecr.aws/atcommons/spark/python:latest
+      spark.kubernetes.authenticate.driver.serviceAccountName                               default-editor
+      spark.kubernetes.executor.annotation.traffic.sidecar.istio.io/excludeOutboundPorts    7078
+      spark.kubernetes.executor.annotation.traffic.sidecar.istio.io/excludeInboundPorts     7079
+
+      # dynamic variables set by spark-env.sh
+      spark.kubernetes.namespace                                                            $NAMESPACE
+      spark.driver.host                                                                     $NOTEBOOK_NAME.$NAMESPACE.svc.cluster.local
+    ```
 
     A reference for the above used configuration can be found on the following links:
       - [Spark Configuration](https://spark.apache.org/docs/latest/configuration.html#spark-configuration) - general attributes
