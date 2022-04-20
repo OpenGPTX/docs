@@ -80,6 +80,10 @@ Steps to create a notebook server are found [here](https://github.com/KubeSoup/d
       spark.kubernetes.executor.annotation.traffic.sidecar.istio.io/excludeOutboundPorts    7078
       spark.kubernetes.executor.annotation.traffic.sidecar.istio.io/excludeInboundPorts     7079
 
+      # for sparkmonitor extension
+      spark.extraListeners                                                                  sparkmonitor.listener.JupyterSparkMonitorListener
+      spark.driver.extraClassPath                                                           /opt/conda/lib/python3.8/site-packages/sparkmonitor/listener_2.12.jar
+
       # dynamic variables set by spark-env.sh
       spark.kubernetes.namespace                                                            $NAMESPACE
       spark.driver.host                                                                     $NOTEBOOK_NAME.$NAMESPACE.svc.cluster.local
@@ -103,3 +107,30 @@ Depending on the task, one might have different resources to get the job done. F
 | xlarge-burst-on-demand              | On-Demand   | m6i.8xlarge                                              | 4     | 16       | N/A                     |
 | large-mem-optimized-nvme-on-demand  | On-Demand   | r5d.large, r5ad.large, r5dn.large                        | 2     | 16       | 75                      |
 | xlarge-mem-optimized-nvme-on-demand | On-Demand   | x2iedn.xlarge                                            | 4     | 128      | 118                     |
+
+## SparkMonitor
+
+Successful loading of the plugin would result in seeing the below INFO when starting a SparkSession
+```
+>>> spark = configure_spark_with_delta_pip(builder).getOrCreate()
+INFO:SparkMonitorKernel:Client Connected ('127.0.0.1', 59734)
+```
+### Issues
+There might be times if you restart the SparkSession instantly, it might be that SparkMonitor is not loaded correctly and fail with the following error.
+
+```python
+Traceback (most recent call last):
+  File "/opt/conda/lib/python3.8/threading.py", line 932, in _bootstrap_inner
+    self.run()
+  File "/opt/conda/lib/python3.8/site-packages/sparkmonitor/kernelextension.py", line 126, in run
+    self.onrecv(msg)
+  File "/opt/conda/lib/python3.8/site-packages/sparkmonitor/kernelextension.py", line 143, in onrecv
+    sendToFrontEnd({
+  File "/opt/conda/lib/python3.8/site-packages/sparkmonitor/kernelextension.py", line 223, in sendToFrontEnd
+    monitor.send(msg)
+  File "/opt/conda/lib/python3.8/site-packages/sparkmonitor/kernelextension.py", line 57, in send
+    self.comm.send(msg)
+AttributeError: 'ScalaMonitor' object has no attribute 'comm'
+```
+
+Solution: Restarting the kernel and re-running the cells will fix the issue.
