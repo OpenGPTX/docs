@@ -11,10 +11,10 @@ Steps to create a notebook server are found [here](https://github.com/KubeSoup/d
 2. Choose one of the below listed images as `Custom Image` as per the requirements.
 
     ```
-    public.ecr.aws/atcommons/notebook-servers/jupyter-spark:14438
-    public.ecr.aws/atcommons/notebook-servers/jupyter-spark-scipy:14438
-    public.ecr.aws/atcommons/notebook-servers/jupyter-spark-pytorch-full:14438
-    public.ecr.aws/atcommons/notebook-servers/jupyter-spark-pytorch-full:cuda-14438
+    public.ecr.aws/atcommons/notebook-servers/jupyter-spark:14468
+    public.ecr.aws/atcommons/notebook-servers/jupyter-spark-scipy:14468
+    public.ecr.aws/atcommons/notebook-servers/jupyter-spark-pytorch-full:14468
+    public.ecr.aws/atcommons/notebook-servers/jupyter-spark-pytorch-full:cuda-14468
     ```
 3. Choose at least 2 CPU cores and 8GB RAM for spark to function properly. If you intend to load bring large subsets onto the notebooks, more RAM is adviced.
 
