@@ -11,10 +11,10 @@ Steps to create a notebook server are found [here](https://github.com/KubeSoup/d
 2. Choose one of the below listed images as `Custom Image` as per the requirements.
 
     ```
-    public.ecr.aws/atcommons/notebook-servers/jupyter-spark:14427
-    public.ecr.aws/atcommons/notebook-servers/jupyter-spark-scipy:14427
-    public.ecr.aws/atcommons/notebook-servers/jupyter-spark-pytorch-full:14427
-    public.ecr.aws/atcommons/notebook-servers/jupyter-spark-pytorch-full:cuda-14427
+    public.ecr.aws/atcommons/notebook-servers/jupyter-spark:14468
+    public.ecr.aws/atcommons/notebook-servers/jupyter-spark-scipy:14468
+    public.ecr.aws/atcommons/notebook-servers/jupyter-spark-pytorch-full:14468
+    public.ecr.aws/atcommons/notebook-servers/jupyter-spark-pytorch-full:cuda-14468
     ```
 3. Choose at least 2 CPU cores and 8GB RAM for spark to function properly. If you intend to load bring large subsets onto the notebooks, more RAM is adviced.
 
@@ -23,7 +23,7 @@ Steps to create a notebook server are found [here](https://github.com/KubeSoup/d
     ```python
     import os
     os.environ["JAVA_HOME"] = "/usr/lib/jvm/default-java"
-    os.environ['PYSPARK_SUBMIT_ARGS'] = '--packages "io.delta:delta-core_2.12:1.1.0,org.apache.hadoop:hadoop-aws:3.3.1" pyspark-shell'
+    os.environ['PYSPARK_SUBMIT_ARGS'] = '--packages "io.delta:delta-core_2.12:1.2.0,org.apache.hadoop:hadoop-aws:3.3.1" pyspark-shell'
 
     import pyspark
     from delta import configure_spark_with_delta_pip
@@ -93,43 +93,6 @@ Steps to create a notebook server are found [here](https://github.com/KubeSoup/d
       - [Spark Configuration](https://spark.apache.org/docs/latest/configuration.html#spark-configuration) - general attributes
       - [Running on Kubernetes Configuration](https://spark.apache.org/docs/latest/running-on-kubernetes.html#configuration) - attirbutes specific to kubernetes
       - [Spark Integration with Amazon Web Services](https://hadoop.apache.org/docs/stable/hadoop-aws/tools/hadoop-aws/index.html) - attributes to configuring access to S3 and other AWS related services
-
-
-## Optional: Verification of Modifications:
-
-Run the following commands, where the expected output is shown.
-
-1. `kubectl get svc $NOTEBOOK_NAME -o yaml`:
-
-    ```
-    spec:
-      ports:
-      - name: driver
-        port: 2222
-        protocol: TCP
-        targetPort: 2222
-      - name: blockmanager
-        port: 7078
-        protocol: TCP
-        targetPort: 7078
-      - name: spark-ui
-        port: 4040
-        protocol: TCP
-        targetPort: 4040
-    ```
-
-    If it is not the case, try to delete the svc one time `kubectl delete svc $NOTEBOOK_NAME` (you will loose the connection to the notebook for a while - refresh the page).
-
-2. `kubectl get StatefulSet $NOTEBOOK_NAME -o yaml`:
-
-    ```
-    spec:
-      template:
-        metadata:
-          annotations:
-            traffic.sidecar.istio.io/excludeInboundPorts: "7078"
-    ```
-
 
 ## Node Groups for the Spark Executors
 
