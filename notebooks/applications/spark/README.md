@@ -23,7 +23,7 @@ Steps to create a notebook server are found [here](https://github.com/KubeSoup/d
     ```python
     import os
     os.environ["JAVA_HOME"] = "/usr/lib/jvm/default-java"
-    os.environ['PYSPARK_SUBMIT_ARGS'] = '--packages "io.delta:delta-core_2.12:1.1.0,org.apache.hadoop:hadoop-aws:3.3.1" pyspark-shell'
+    os.environ['PYSPARK_SUBMIT_ARGS'] = '--packages "io.delta:delta-core_2.12:1.2.0,org.apache.hadoop:hadoop-aws:3.3.1" pyspark-shell'
 
     import pyspark
     from delta import configure_spark_with_delta_pip
