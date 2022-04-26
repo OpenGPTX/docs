@@ -1,8 +1,24 @@
+**WIP - Do not take this as published!**
+
 # SparkApplication debugging
 
 This doc should help the users to debug SparkApplications.
 
 Since the Kubeflow dashboard does not support enough logging capabilities for SparkApplications, this manual gives a guidance how to debug it manually.
+
+## In short
+
+```
+kubectl get sparkapplication
+
+kubectl get sparkapplication <sparkapplication-name>
+
+kubectl describe sparkapplication <sparkapplication-name>
+
+kubectl logs <sparkapplication-name>-driver
+
+kubectl logs <spark-executor-name>
+```
 
 ## Jupyter terminal
 
