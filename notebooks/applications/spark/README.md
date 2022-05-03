@@ -11,10 +11,10 @@ Steps to create a notebook server are found [here](https://github.com/KubeSoup/d
 2. Choose one of the below listed images as `Custom Image` as per the requirements.
 
     ```
-    public.ecr.aws/atcommons/notebook-servers/jupyter-spark:14489
-    public.ecr.aws/atcommons/notebook-servers/jupyter-spark-scipy:14489
-    public.ecr.aws/atcommons/notebook-servers/jupyter-spark-pytorch-full:14489
-    public.ecr.aws/atcommons/notebook-servers/jupyter-spark-pytorch-full:cuda-14489
+    public.ecr.aws/atcommons/notebook-servers/jupyter-spark:14664
+    public.ecr.aws/atcommons/notebook-servers/jupyter-spark-scipy:14664
+    public.ecr.aws/atcommons/notebook-servers/jupyter-spark-pytorch-full:14664
+    public.ecr.aws/atcommons/notebook-servers/jupyter-spark-pytorch-full:cuda-14664
     ```
 3. Choose at least 2 CPU cores and 8GB RAM for spark to function properly. If you intend to load bring large subsets onto the notebooks, more RAM is adviced.
 
@@ -22,8 +22,17 @@ Steps to create a notebook server are found [here](https://github.com/KubeSoup/d
 
     ```python
     import os
+
+    # add the maven packages you want to use
+    maven_packages = [
+        "io.delta:delta-core_2.12:1.1.0",
+        "org.apache.hadoop:hadoop-aws:3.3.1",
+        # "com.johnsnowlabs.nlp:spark-nlp-spark32_2.12:3.4.3", # for sparknlp
+    ]
+    maven_packages = ",".join(maven_packages)
+
     os.environ["JAVA_HOME"] = "/usr/lib/jvm/default-java"
-    os.environ['PYSPARK_SUBMIT_ARGS'] = '--packages "io.delta:delta-core_2.12:1.2.0,org.apache.hadoop:hadoop-aws:3.3.1" pyspark-shell'
+    os.environ['PYSPARK_SUBMIT_ARGS'] = f'--packages "{maven_packages}" pyspark-shell'
 
     import pyspark
     from delta import configure_spark_with_delta_pip
@@ -33,7 +42,7 @@ Steps to create a notebook server are found [here](https://github.com/KubeSoup/d
 
     builder = (
         pyspark.sql.SparkSession.builder.appName(f"{namespace}-spark-app")
-        .config("fs.s3a.aws.credentials.provider", "com.amazonaws.auth.WebIdentityTokenCredentialsProvider") # Either use built in authentication for S3
+        .config("spark.hadoop.fs.s3a.aws.credentials.provider", "com.amazonaws.auth.WebIdentityTokenCredentialsProvider") # Either use built in authentication for S3
         # or a custom one with specific S3 Access and Secret Keys below
         # .config("spark.hadoop.fs.s3a.access.key", os.environ['AWS_S3_ACCESS_KEY']) # optional
         # .config("spark.hadoop.fs.s3a.secret.key", os.environ['AWS_S3_SECRET_KEY']) # optional
@@ -75,7 +84,7 @@ Steps to create a notebook server are found [here](https://github.com/KubeSoup/d
       spark.driver.blockManager.port                                                        7078
       spark.blockManager.port                                                               7079
       spark.kubernetes.container.image.pullPolicy                                           Always
-      spark.kubernetes.container.image                                                      public.ecr.aws/atcommons/spark/python:latest
+      spark.kubernetes.container.image                                                      public.ecr.aws/atcommons/spark/python:14469
       spark.kubernetes.authenticate.driver.serviceAccountName                               default-editor
       spark.kubernetes.executor.annotation.traffic.sidecar.istio.io/excludeOutboundPorts    7078
       spark.kubernetes.executor.annotation.traffic.sidecar.istio.io/excludeInboundPorts     7079
@@ -133,4 +142,4 @@ Traceback (most recent call last):
 AttributeError: 'ScalaMonitor' object has no attribute 'comm'
 ```
 
-Solution: Restarting the kernel and re-running the cells will fix the issue.
+Solution: Shutdown the kernel and close the notebook. Re-opening the notebook and running the cells should fix it.
