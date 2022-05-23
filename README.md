@@ -19,7 +19,7 @@ Documentation for platform users
 ## Spark
 
 -   [Setup](./notebooks/applications/spark/README.md)
--   [Example Notebook](./notebooks/applications/spark/notebooks/pyspark_example.ipynb)
+-   [Example Notebooks](./notebooks/applications/spark/notebooks/)
 
 ## Pipelines
 
