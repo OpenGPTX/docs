@@ -11,10 +11,10 @@ Steps to create a notebook server are found [here](https://github.com/KubeSoup/d
 2. Choose one of the below listed images as `Custom Image` as per the requirements.
 
     ```
-    public.ecr.aws/atcommons/notebook-servers/jupyter-spark:14664
-    public.ecr.aws/atcommons/notebook-servers/jupyter-spark-scipy:14664
-    public.ecr.aws/atcommons/notebook-servers/jupyter-spark-pytorch-full:14664
-    public.ecr.aws/atcommons/notebook-servers/jupyter-spark-pytorch-full:cuda-14664
+    ghcr.io/opengptx/notebook-servers/jupyter-spark:2371524312
+    ghcr.io/opengptx/notebook-servers/jupyter-spark-scipy:2371524312
+    ghcr.io/opengptx/notebook-servers/jupyter-spark-pytorch:2371524312
+    ghcr.io/opengptx/notebook-servers/jupyter-spark-pytorch-cuda:2371524312
     ```
 3. Choose at least 2 CPU cores and 8GB RAM for spark to function properly. If you intend to load bring large subsets onto the notebooks, more RAM is adviced.
 
@@ -42,6 +42,7 @@ Steps to create a notebook server are found [here](https://github.com/KubeSoup/d
     
     builder = (
         pyspark.sql.SparkSession.builder.appName(f"{namespace}-spark-app")
+        .config("spark.kubernetes.executor.annotation.proxy.istio.io/config", '{ "holdApplicationUntilProxyStarts": true }') # To avoid healtcheck terminating loops
         .config("spark.hadoop.fs.s3a.aws.credentials.provider", "com.amazonaws.auth.WebIdentityTokenCredentialsProvider") # Either use built in authentication for S3
         # or a custom one with specific S3 Access and Secret Keys below
         # .config("spark.hadoop.fs.s3a.access.key", os.environ['AWS_S3_ACCESS_KEY']) # optional
