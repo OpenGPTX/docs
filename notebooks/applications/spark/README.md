@@ -42,6 +42,7 @@ Steps to create a notebook server are found [here](https://github.com/KubeSoup/d
     
     builder = (
         pyspark.sql.SparkSession.builder.appName(f"{namespace}-spark-app")
+        .config("spark.kubernetes.executor.annotation.proxy.istio.io/config", '{ "holdApplicationUntilProxyStarts": true }') # To avoid healtcheck terminating loops
         .config("spark.hadoop.fs.s3a.aws.credentials.provider", "com.amazonaws.auth.WebIdentityTokenCredentialsProvider") # Either use built in authentication for S3
         # or a custom one with specific S3 Access and Secret Keys below
         # .config("spark.hadoop.fs.s3a.access.key", os.environ['AWS_S3_ACCESS_KEY']) # optional
