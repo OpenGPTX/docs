@@ -87,7 +87,6 @@ Steps to create a notebook server are found [here](https://github.com/KubeSoup/d
       spark.kubernetes.container.image.pullPolicy                                           Always
       spark.kubernetes.container.image                                                      public.ecr.aws/atcommons/spark/python:14469
       spark.kubernetes.authenticate.driver.serviceAccountName                               default-editor
-      spark.kubernetes.executor.annotation.traffic.sidecar.istio.io/excludeOutboundPorts    7078
       spark.kubernetes.executor.annotation.traffic.sidecar.istio.io/excludeInboundPorts     7079
     
       # for sparkmonitor extension
