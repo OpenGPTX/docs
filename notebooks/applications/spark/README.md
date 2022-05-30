@@ -11,10 +11,10 @@ Steps to create a notebook server are found [here](https://github.com/KubeSoup/d
 2. Choose one of the below listed images as `Custom Image` as per the requirements.
 
     ```
-    ghcr.io/opengptx/notebook-servers/jupyter-spark:2371524312
-    ghcr.io/opengptx/notebook-servers/jupyter-spark-scipy:2371524312
-    ghcr.io/opengptx/notebook-servers/jupyter-spark-pytorch:2371524312
-    ghcr.io/opengptx/notebook-servers/jupyter-spark-pytorch-cuda:2371524312
+    ghcr.io/opengptx/notebook-servers/jupyter-spark:2384563739
+    ghcr.io/opengptx/notebook-servers/jupyter-spark-scipy:2384563739
+    ghcr.io/opengptx/notebook-servers/jupyter-spark-pytorch:2384563739
+    ghcr.io/opengptx/notebook-servers/jupyter-spark-pytorch-cuda:2384563739
     ```
 3. Choose at least 2 CPU cores and 8GB RAM for spark to function properly. If you intend to load bring large subsets onto the notebooks, more RAM is adviced.
 
@@ -87,7 +87,6 @@ Steps to create a notebook server are found [here](https://github.com/KubeSoup/d
       spark.kubernetes.container.image.pullPolicy                                           Always
       spark.kubernetes.container.image                                                      public.ecr.aws/atcommons/spark/python:14469
       spark.kubernetes.authenticate.driver.serviceAccountName                               default-editor
-      spark.kubernetes.executor.annotation.traffic.sidecar.istio.io/excludeInboundPorts     7079
     
       # for sparkmonitor extension
       spark.extraListeners                                                                  sparkmonitor.listener.JupyterSparkMonitorListener
