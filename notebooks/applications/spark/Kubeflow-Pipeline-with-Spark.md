@@ -1,14 +1,16 @@
 # Kubeflow Pipeline with Spark
 
+Notebooks might not be the most convinent way to run long Spark jobs.
 This guide will cover how to use Spark inside Kubeflow Pipeline. There is also a [working example](./notebooks/spark_kfp_example.ipynb) available in the repo.
 
 1. For running the pipelines from inside the notebook, we need to connect to the KF Pipelines API server. The steps are provided [here](../../../pipelines/notebook-access.md).
 
-2. To run Spark, we need to create a `SparkApplication` in `Cluster` mode. Using the below function, one can provide the docker image(with all the needed packages already installed) and the resources needed for the drivers and executors and the `application_file` which is the script to run.
+2. To run Spark, we need to create a `SparkApplication` in `Cluster` mode. Using the below function, one can provide the docker image (with all the needed packages already installed) and the resources needed for the drivers and executors and the `application_file` which is the script to run.
 
-The `application_file` can be some script file already present inside the docker image(as shown in the [example](./notebooks/spark_kfp_example.ipynb)), or can be a file on s3 (eg [here](./Using-S3-SparkApplication-mainApplicationFile.md)).
+The `application_file` can be some [python file](https://github.com/OpenGPTX/docker-images/blob/main/spark/python/delta-lake-examples/num.py) already present inside the docker image (as shown in the [example](./notebooks/spark_kfp_example.ipynb)), or can be a file on s3 (eg [here](./Using-S3-SparkApplication-mainApplicationFile.md#way2-irsa)).
 
-Docs about Spark Operator [here](https://github.com/GoogleCloudPlatform/spark-on-k8s-operator/blob/master/docs/user-guide.md).
+Docs about configuring the `SparkApplication` can be found [here](https://github.com/GoogleCloudPlatform/spark-on-k8s-operator/blob/master/docs/user-guide.md)
+and some other examples are located [here](https://github.com/GoogleCloudPlatform/spark-on-k8s-operator/tree/master/examples).
 
 ```python
 namespace = os.environ["NAMESPACE"]  # firstname-lastname
@@ -92,3 +94,7 @@ run = client.create_run_from_pipeline_func(
 )
 print("Kubeflow Pipelines run id: {}".format(run.run_id))
 ```
+
+### Debugging SparkApplication
+
+For debugging the `SparkApplication`, please refer to the docs [here](./SparkApplication-debugging.md).

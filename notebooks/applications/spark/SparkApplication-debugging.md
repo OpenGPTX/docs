@@ -1,5 +1,3 @@
-**WIP - Do not take this as published!**
-
 # SparkApplication debugging
 
 This doc should help the users to debug SparkApplications.
@@ -73,4 +71,3 @@ kubectl logs <spark-executor-name>
 ```
 
 Tip: you can add the `-f` flag (similar to `tail -f`) to follow the continuous logs.
-
