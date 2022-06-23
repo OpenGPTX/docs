@@ -25,7 +25,7 @@ Steps to create a notebook server are found [here](https://github.com/KubeSoup/d
     
     # add the maven packages you want to use
     maven_packages = [
-        "io.delta:delta-core_2.12:1.1.0",
+        "io.delta:delta-core_2.12:1.2.0",
         "org.apache.hadoop:hadoop-aws:3.3.1",
         # "com.johnsnowlabs.nlp:spark-nlp-spark32_2.12:3.4.3", # for sparknlp
     ]
