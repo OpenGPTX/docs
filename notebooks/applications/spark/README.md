@@ -11,10 +11,10 @@ Steps to create a notebook server are found [here](https://github.com/KubeSoup/d
 2. Choose one of the below listed images as `Custom Image` as per the requirements.
 
     ```
-    ghcr.io/opengptx/notebook-servers/jupyter-spark:2452929093
-    ghcr.io/opengptx/notebook-servers/jupyter-spark-scipy:2452929093
-    ghcr.io/opengptx/notebook-servers/jupyter-spark-pytorch:2452929093
-    ghcr.io/opengptx/notebook-servers/jupyter-spark-pytorch-cuda:2452929093
+    ghcr.io/opengptx/notebook-servers/jupyter-spark:2547792480
+    ghcr.io/opengptx/notebook-servers/jupyter-spark-scipy:2547792480
+    ghcr.io/opengptx/notebook-servers/jupyter-spark-pytorch:2547792480
+    ghcr.io/opengptx/notebook-servers/jupyter-spark-pytorch-cuda:2547792480
     ```
 3. Choose at least 2 CPU cores and 8GB RAM for spark to function properly. If you intend to load bring large subsets onto the notebooks, more RAM is adviced.
 
@@ -25,7 +25,7 @@ Steps to create a notebook server are found [here](https://github.com/KubeSoup/d
     
     # add the maven packages you want to use
     maven_packages = [
-        "io.delta:delta-core_2.12:1.1.0",
+        "io.delta:delta-core_2.12:1.2.0",
         "org.apache.hadoop:hadoop-aws:3.3.1",
         # "com.johnsnowlabs.nlp:spark-nlp-spark32_2.12:3.4.3", # for sparknlp
     ]
@@ -85,7 +85,7 @@ Steps to create a notebook server are found [here](https://github.com/KubeSoup/d
       spark.driver.blockManager.port                                                        7078
       spark.blockManager.port                                                               7079
       spark.kubernetes.container.image.pullPolicy                                           Always
-      spark.kubernetes.container.image                                                      ghcr.io/opengptx/spark/python:pr-10
+      spark.kubernetes.container.image                                                      ghcr.io/opengptx/spark/python:pr-13
       spark.kubernetes.authenticate.driver.serviceAccountName                               default-editor
     
       # for sparkmonitor extension
@@ -121,6 +121,8 @@ Depending on the task, one might have different resources to get the job done. F
 | xlarge-mem-optimized-on-demand     | On-Demand   | r5.xlarge, r5a.xlarge, r5b.xlarge, r5n.xlarge, r4.xlarge | 4     | 32       | 3                         | 26gb                    | N/A                     |
 | large-mem-optimized-nvme-on-demand | On-Demand   | r5d.large, r5ad.large, r5dn.large                        | 2     | 16       | 1                         | 13gb                    | 75                      |
 | xlarge-max-mem-optimized-on-demand | On-Demand   | x1e.xlarge                                               | 4     | 122      | 3                         | 106gb                   | N/A                     |
+| m68xlarge-general-on-demand        | On-Demand   | m6a.8xlarge                                              | 32    | 128      | 31                        | 90gb                    | N/A                     |
+| c5a16xlarge-compute-on-demand      | On-Demand   | c5a.16xlarge                                             | 64    | 128      | 61                        | 90gb                    | N/A                     |
 
 ## SparkMonitor
 

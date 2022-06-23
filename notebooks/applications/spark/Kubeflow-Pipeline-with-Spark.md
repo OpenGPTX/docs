@@ -14,7 +14,7 @@ and some other examples are located [here](https://github.com/GoogleCloudPlatfor
 
 ```python
 namespace = os.environ["NAMESPACE"]  # firstname-lastname
-docker_image = "ghcr.io/opengptx/spark/python:pr-10"
+docker_image = "ghcr.io/opengptx/spark/python:pr-13"
 
 def get_resource(
         application_file : str,
