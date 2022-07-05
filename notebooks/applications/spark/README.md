@@ -124,6 +124,10 @@ Depending on the task, one might have different resources to get the job done. F
 | m68xlarge-general-on-demand        | On-Demand   | m6a.8xlarge                                              | 32    | 128      | 31                        | 90gb                    | N/A                     |
 | c5a16xlarge-compute-on-demand      | On-Demand   | c5a.16xlarge                                             | 64    | 128      | 61                        | 90gb                    | N/A                     |
 
+## SparkHistoryServer
+
+For logging, monitoring and debugging your SparkSessions and/or your SparkApplications take a look into our SparkHistoryServer [manual](https://github.com/KubeSoup/docs/blob/main/notebooks/applications/spark/SparkHistoryServer.md).
+
 ## SparkMonitor
 
 Successful loading of the plugin would result in seeing the below INFO when starting a SparkSession
