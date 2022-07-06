@@ -29,10 +29,11 @@ spec:
   image: public.ecr.aws/atcommons/sparkhistoryserver:14469 #It is Spark version 3.2.1
 EOF
 ```
+That's it. Give the SparkHistoryServer one minute to start and follow with [accessing the UI](#access-your-own-sparkhistoryserver).
 
 #### Optional: background information and advanced confugurations
 
-In the background it adds automatically a lot of default confgurations. Be careful in case of changing and ensure you know what you are doing otherwise leave the defaults =)
+In the background it adds automatically a lot of default confgurations. Be careful in case of changing and ensure you know what you are doing, otherwise leave the defaults ;)
 
 `kubectl get SparkHistoryServer sparkhistoryserver -o yaml`:
 ```
