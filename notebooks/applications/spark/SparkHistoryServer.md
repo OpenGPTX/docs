@@ -93,9 +93,10 @@ BTW: The SparkHistoryServer is stateless that mean you can delete and create it 
 
 All you need to know is:
 - The `base_url` from your cluster (typically `kubeflow.at.onplural.sh` but you can extract it from your JupyterLab Notebook url)
-- and your `your_namespace` (typically it is `firstname-lastname` you can get it also with this command `echo $NAMESPACE`)
+- and your `your_namespace` (typically it is `firstname-lastname` you can get it also in your JupyterLab Notebook with this command `echo $NAMESPACE`)
 
 Then the correct url would be: `https://<base_url>/sparkhistory/<your_namespace>`
+
 For me, it would be: `https://kubeflow.at.onplural.sh/sparkhistory/tim-krause`
 
 ## Using SparkHistoryServer
