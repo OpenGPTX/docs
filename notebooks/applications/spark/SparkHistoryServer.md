@@ -30,19 +30,63 @@ spec:
 EOF
 ```
 
-#### Advanced confugurations
+#### Optional: background information and advanced confugurations
 
-##### Retention
+In the background it adds automatically a lot of default confgurations. Be careful in case of changing and ensure you know what you are doing otherwise leave the defaults =)
 
-##### All possible configurations
+`kubectl get SparkHistoryServer sparkhistoryserver -o yaml`:
+```
+apiVersion: kubricks.kubricks.io/v1
+kind: SparkHistoryServer
+metadata:
+  name: sparkhistoryserver
+  namespace: <your_namespace>
+spec:
+  cleaner:
+    enabled: true
+    maxAge: 30d
+  image: public.ecr.aws/atcommons/sparkhistoryserver:14469
+  imagePullPolicy: IfNotPresent
+  replicas: 1
+  resources:
+    limits:
+      cpu: 1000m
+      memory: 1Gi
+    requests:
+      cpu: 100m
+      memory: 512Mi
+  serviceAccountName: default-editor
+```
+- By default a logrotation is enabled. It deletes all spark logs that are older than 30d
+```
+  cleaner:
+    enabled: true
+    maxAge: 30d
+```
+- Only use 1 replica otherwise it wastes a lot resources
+```
+  replicas: 1
 
-##### Troubleshooting
+```
+- The default resources have a nice responsivness
+```
+  resources:
+    limits:
+      cpu: 1000m
+      memory: 1Gi
+    requests:
+      cpu: 100m
+      memory: 512Mi
+```
+- `serviceAccountName`: It is required for according S3 permissions. Do not change it.
+
+
 
 ### Delete your SparkHistoryServer
 
 Just run the following command: `kubectl delete SparkHistoryServer sparkhistoryserver`
 
-BTW: The SparkHistoryServer is stateless that mean you can delete and create it as often as you want and it does not affect the data (spark logs). Hence it does not delete your spark logs on the S3 bucket!
+BTW: The SparkHistoryServer is stateless that mean you can delete and create it as often as you want and it does not affect the data (spark logs). Hence it does not delete/cleanup your spark logs on the S3 bucket!
 
 ## Access your own SparkHistoryServer
 
@@ -61,21 +105,90 @@ Since the Spark History Server is a kind of collection of all of your SparkUI's,
 
 In order to upload the according logs from your SparkSession or SparkApplication, you need to configure it to do so.
 
-### SparkSession
+What you need to adjust in the following sections, is:
+- The `main_bucket` from your cluster (typically `at-plural-sh-at-onplural-sh-kubeflow-pipelines` but you can extract it from your JupyterLab Notebook url with the following command)
+```
+kubectl get cm  artifact-repositories -o yaml
+...
+data:
+  default-v1: |-
+    archiveLogs: true
+    s3:
+      bucket: at-plural-sh-at-onplural-sh-kubeflow-pipelines
+...
 
 ```
+- and your `your_namespace` (typically it is `firstname-lastname` you can get it also with this command `echo $NAMESPACE`)
 
+Then the bucket path would be: `s3a://<main_bucket>/pipelines/<your_namespace>/history`
+For me, it would be: `s3a://at-plural-sh-at-onplural-sh-kubeflow-pipelines/pipelines/tim-krause/history`
+
+### SparkSession
+
+Normally a lot is already configured because you use S3. Then only `spark.eventLog.enabled` and `spark.eventLog.dir` needs to be added by you. However, to make it complete:
+```
+    .config("spark.hadoop.fs.s3a.aws.credentials.provider", "com.amazonaws.auth.WebIdentityTokenCredentialsProvider")
+    .config("spark.eventLog.enabled", "true")
+    .config("spark.eventLog.dir", "s3a://<main_bucket>/pipelines/<your_namespace>/history")
 ```
 
 ### SparkApplication
 
+Normally a lot is already configured because you use S3. Then only `spark.eventLog.enabled` and `spark.eventLog.dir` needs to be added by you. However, to make it complete:
+```
+spec:
+  sparkConf:
+    "spark.hadoop.fs.s3a.impl": "org.apache.hadoop.fs.s3a.S3AFileSystem"
+    "spark.hadoop.fs.s3a.aws.credentials.provider": "com.amazonaws.auth.WebIdentityTokenCredentialsProvider"
+    "spark.eventLog.enabled": "true"
+    "spark.eventLog.dir": "s3a://<main_bucket>/pipelines/<your_namespace>/history"
 ```
 
-```
 
 ### SparkApplication in KFP (in Kubeflow Pipelines)
 
+Normally a lot is already configured because you use S3. Then only `spark.eventLog.enabled` and `spark.eventLog.dir` needs to be added by you. However, to make it complete:
+```
+            "sparkConf": {
+                    "spark.hadoop.fs.s3a.impl": "org.apache.hadoop.fs.s3a.S3AFileSystem",
+                    "spark.hadoop.fs.s3a.aws.credentials.provider": "com.amazonaws.auth.WebIdentityTokenCredentialsProvider"
+                    "spark.eventLog.enabled": "com.amazonaws.auth.WebIdentityTokenCredentialsProvider"
+                    "spark.eventLog.dir": "s3a://<main_bucket>/pipelines/<your_namespace>/history"
+            },
 ```
 
-```
 
+
+## Troubleshooting
+
+### missing required field "spec"
+
+**error: error validating "STDIN": error validating data: ValidationError(SparkHistoryServer): missing required field "spec" in io.kubricks.kubricks.v1.SparkHistoryServer; if you choose to ignore these errors, turn validation off with --validate=false**
+
+Probably you only specified something like:
+```
+cat <<EOF | kubectl apply -f -
+apiVersion: kubricks.kubricks.io/v1
+kind: SparkHistoryServer
+metadata:
+  name: sparkhistoryserver
+EOF
+```
+But the `spec:` field is required. Take a look into the CRD section again!
+
+### missing required field "image"
+
+**error: error validating "STDIN": error validating data: [ValidationError(SparkHistoryServer.spec): unknown field "foo" in io.kubricks.kubricks.v1.SparkHistoryServer.spec, ValidationError(SparkHistoryServer.spec): missing required field "image" in io.kubricks.kubricks.v1.SparkHistoryServer.spec]; if you choose to ignore these errors, turn validation off with --validate=false**
+
+Probably you only specified something like:
+```
+cat <<EOF | kubectl apply -f -
+apiVersion: kubricks.kubricks.io/v1
+kind: SparkHistoryServer
+metadata:
+  name: sparkhistoryserver
+spec:
+  foo: foo
+EOF
+```
+But the `image:` field is required. Take a look into the CRD section again and specify the according `image`!
