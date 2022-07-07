@@ -1,14 +1,14 @@
 # SparkHistoryServer
 
-The Spark History Server is the central logging and monitoring dashboard for spark. It is exactly like the SparkUI but for all of your spark jobs.
+The Spark History Server is the central logging and monitoring dashboard for Spark. It is exactly like the SparkUI but for all of your Spark jobs.
 
 Architecture:
-- The SparkSession | SparkApplication uploads the logs onto an S3 bucket
-- The Spark History Server listens that S3 bucket in order to show all information about the spark job
+- The SparkSession/SparkApplication uploads the logs onto an S3 bucket
+- The Spark History Server listens that S3 bucket in order to show all information about the Spark job(s)
 
 ## Create your own SparkHistoryServer
 
-We provide the Spark History Server as a self-serving service which means you can simply provision it by yourself if you need it. If you don't need it anymore, please delete it to free up the resources and save money (it does not delete your logs) =)
+We provide the Spark History Server as a **self-serving service** which means you can simply provision it by yourself if you need it. If you don't need it anymore, please delete it to free up the resources and save money =) (don't worry, it does not delete your logs)
 
 ### 1. Get all dynamic values/variables/names
 
@@ -27,13 +27,11 @@ data:
 ```
 ### 2. Create a bucket folder
 
-This step is required but needs to be done only once for every user.
+This step is required but needs to be done **only once** for every user.
 
-All you need to adjust is:
+Open a JupyterLab Notebook and just execute the following in a cell, all you need to adjust is:
 - the `main_bucket` 
 - and your `your_namespace`
-
-Open a JupyterLab Notebook and just execute the following in a cell:
 ```
 !pip install boto3
 
@@ -90,7 +88,7 @@ spec:
       memory: 512Mi
   serviceAccountName: default-editor
 ```
-- By default a logrotation is enabled. It deletes all spark logs that are older than 30d
+- By default a logrotation is enabled. It deletes all Spark logs that are older than 30d
 ```
   cleaner:
     enabled: true
@@ -118,7 +116,7 @@ spec:
 
 Just run the following command: `kubectl delete SparkHistoryServer sparkhistoryserver`
 
-BTW: The SparkHistoryServer is stateless that mean you can delete and create it as often as you want and it does not affect the data (spark logs). Hence it does not delete/cleanup your spark logs on the S3 bucket!
+BTW: The SparkHistoryServer is stateless that mean you can delete and create it as often as you want and it does not affect the data (Spark logs). Hence it does not delete/cleanup your Spark logs on the S3 bucket!
 
 ## 4. Access your own SparkHistoryServer
 
