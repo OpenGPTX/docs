@@ -10,15 +10,47 @@ Architecture:
 
 We provide the Spark History Server as a self-serving service which means you can simply provision it by yourself if you need it. If you don't need it anymore, please delete it to free up the resources and save money (it does not delete your logs) =)
 
-### Create a bucket folder
+### 1. Get all dynamic values/variables/names
 
+- The `base_url` from your cluster (typically `kubeflow.at.onplural.sh` but you can extract it from your JupyterLab Notebook url)
+- The `your_namespace` (typically it is `firstname-lastname` you can get it also in your JupyterLab Notebook with this command `echo $NAMESPACE`)
+- The `main_bucket` from your cluster (typically `at-plural-sh-at-onplural-sh-kubeflow-pipelines` but you can extract it from your JupyterLab Notebook with the following command):
 ```
-TODO
+kubectl get cm  artifact-repositories -o yaml
+...
+data:
+  default-v1: |-
+    archiveLogs: true
+    s3:
+      bucket: at-plural-sh-at-onplural-sh-kubeflow-pipelines
+...
+```
+### 2. Create a bucket folder
+
+This step is required but needs to be done only once for every user.
+
+All you need to adjust is:
+- the `main_bucket` 
+- and your `your_namespace`
+
+Open a JupyterLab Notebook and just execute the following in a cell:
+```
+!pip install boto3
+
+import boto3
+
+client = boto3.client('s3')
+
+response = client.put_object(
+        Bucket='<main_bucket>',
+        Body='',
+        Key='pipelines/<your_namespace>/history/'
+        )
 ```
 
-### CRD
+### 3. CRD
 
-It is very convinient to spin up your Spark History Server. From your JupyterLab Notebook Terminal, simply apply:
+It is very convenient to spin up your Spark History Server. From your JupyterLab Notebook Terminal, simply apply:
 ```
 cat <<EOF | kubectl apply -f -
 apiVersion: kubricks.kubricks.io/v1
@@ -29,7 +61,7 @@ spec:
   image: public.ecr.aws/atcommons/sparkhistoryserver:14469 #It is Spark version 3.2.1
 EOF
 ```
-That's it. Give the SparkHistoryServer one minute to start and follow with [accessing the UI](#access-your-own-sparkhistoryserver).
+That's it. Give the SparkHistoryServer one minute to start and follow with [accessing the UI](#4-access-your-own-sparkhistoryserver).
 
 #### Optional: background information and advanced confugurations
 
@@ -67,7 +99,6 @@ spec:
 - Only use 1 replica otherwise it wastes a lot resources
 ```
   replicas: 1
-
 ```
 - The default resources have a nice responsivness
 ```
@@ -89,44 +120,32 @@ Just run the following command: `kubectl delete SparkHistoryServer sparkhistorys
 
 BTW: The SparkHistoryServer is stateless that mean you can delete and create it as often as you want and it does not affect the data (spark logs). Hence it does not delete/cleanup your spark logs on the S3 bucket!
 
-## Access your own SparkHistoryServer
+## 4. Access your own SparkHistoryServer
 
 All you need to know is:
-- The `base_url` from your cluster (typically `kubeflow.at.onplural.sh` but you can extract it from your JupyterLab Notebook url)
-- and `your_namespace` (typically it is `firstname-lastname` you can get it also in your JupyterLab Notebook with this command `echo $NAMESPACE`)
+- the `base_url`
+- and `your_namespace`
 
-Then the correct url would be: `https://<base_url>/sparkhistory/<your_namespace>`
+Then the correct url would be in general: `https://<base_url>/sparkhistory/<your_namespace>`
 
-For me, it would be: `https://kubeflow.at.onplural.sh/sparkhistory/tim-krause`
+More specificly, for me it would be: `https://kubeflow.at.onplural.sh/sparkhistory/tim-krause`
 
 The only missing part is to configure your SparkSession/SparkApplication, just jump to [correct section](#configure-your-sparksession--sparkapplication-to-upload-logs-to-the-bucketsparkhistoryserver).
 
 
-## Using SparkHistoryServer
+## 5. Using SparkHistoryServer
 
 Since the Spark History Server is a kind of collection of all of your SparkUI's, just read the official doc for the [SparkUI](https://spark.apache.org/docs/latest/web-ui.html).
 
 ## Configure your SparkSession | SparkApplication to upload logs to the Bucket/SparkHistoryServer
 
-In order to upload the according logs from your SparkSession or SparkApplication, you need to configure it to do so.
+In order to upload the according logs from your SparkSession or SparkApplication, you need to configure it to do so. What you need to adjust in the following sections, is:
+- the `main_bucket` 
+- and your `your_namespace`
 
-What you need to adjust in the following sections, is:
-- The `main_bucket` from your cluster (typically `at-plural-sh-at-onplural-sh-kubeflow-pipelines` but you can extract it from your JupyterLab Notebook url with the following command)
-```
-kubectl get cm  artifact-repositories -o yaml
-...
-data:
-  default-v1: |-
-    archiveLogs: true
-    s3:
-      bucket: at-plural-sh-at-onplural-sh-kubeflow-pipelines
-...
+Then the bucket path would be in general: `s3a://<main_bucket>/pipelines/<your_namespace>/history`
 
-```
-- and your `your_namespace` (typically it is `firstname-lastname` you can get it also with this command `echo $NAMESPACE`)
-
-Then the bucket path would be: `s3a://<main_bucket>/pipelines/<your_namespace>/history`
-For me, it would be: `s3a://at-plural-sh-at-onplural-sh-kubeflow-pipelines/pipelines/tim-krause/history`
+More specificly, for me it would be: `s3a://at-plural-sh-at-onplural-sh-kubeflow-pipelines/pipelines/tim-krause/history`
 
 ### SparkSession
 
@@ -197,3 +216,19 @@ spec:
 EOF
 ```
 But the `image:` field is required. Take a look into the CRD section again and specify the according `image`!
+
+
+### FileNotFoundException
+
+How to identify the problem?
+```
+# Identify the podname
+kubectl get pod | grep sparkhistoryserver
+
+# Get the logs from the podname
+kubectl logs sparkhistoryserver-7bd64db7d7-tl4hn
+
+# Here is the specific error message to identify the problem:
+Caused by: java.io.FileNotFoundException: No such file or directory: s3a://at-plural-sh-at-onplural-sh-kubeflow-pipelines/pipelines/tim-krause/history
+```
+How to fix? Jump to [Create a bucket folder](#2-create-a-bucket-folder).
