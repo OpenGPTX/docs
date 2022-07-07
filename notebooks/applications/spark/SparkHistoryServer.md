@@ -12,9 +12,9 @@ We provide the Spark History Server as a **self-serving service** which means yo
 
 ### 1. Get all dynamic values/variables/names
 
-- The `base_url` from your cluster (typically `kubeflow.at.onplural.sh` but you can extract it from your JupyterLab Notebook url)
-- The `your_namespace` (typically it is `firstname-lastname` you can get it also in your JupyterLab Notebook with this command `echo $NAMESPACE`)
-- The `main_bucket` from your cluster (typically `at-plural-sh-at-onplural-sh-kubeflow-pipelines` but you can extract it from your JupyterLab Notebook with the following command):
+- The `base_url` from your cluster. Typically it is `kubeflow.at.onplural.sh` but you can extract it from your JupyterLab Notebook url.
+- The `your_namespace` which is typically `firstname-lastname`. You can get it also in your JupyterLab Notebook with this command `echo $NAMESPACE`.
+- The `main_bucket` from your cluster. Typically it is `at-plural-sh-at-onplural-sh-kubeflow-pipelines` but you can extract it from your JupyterLab Notebook with the following command:
 ```
 kubectl get cm  artifact-repositories -o yaml
 ...
