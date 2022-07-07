@@ -48,7 +48,7 @@ response = client.put_object(
 
 ### 3. CRD
 
-It is very convenient to spin up your Spark History Server. From your JupyterLab Notebook Terminal, simply apply:
+It is very convenient to spin up your Spark History Server. From your JupyterLab Notebook **Terminal**, simply apply:
 ```
 cat <<EOF | kubectl apply -f -
 apiVersion: kubricks.kubricks.io/v1
@@ -88,17 +88,17 @@ spec:
       memory: 512Mi
   serviceAccountName: default-editor
 ```
-- By default a logrotation is enabled. It deletes all Spark logs that are older than 30d
+- By default a logrotation is enabled. It deletes all Spark logs that are older than 30d:
 ```
   cleaner:
     enabled: true
     maxAge: 30d
 ```
-- Only use 1 replica otherwise it wastes a lot resources
+- Only use 1 replica otherwise it wastes a lot resources:
 ```
   replicas: 1
 ```
-- The default resources have a nice responsivness
+- The default resources have a nice responsiveness:
 ```
   resources:
     limits:
@@ -116,7 +116,7 @@ spec:
 
 Just run the following command: `kubectl delete SparkHistoryServer sparkhistoryserver`
 
-BTW: The SparkHistoryServer is stateless that mean you can delete and create it as often as you want and it does not affect the data (Spark logs). Hence it does not delete/cleanup your Spark logs on the S3 bucket!
+BTW: The SparkHistoryServer is stateless. This means you can delete and create it as often as you want and it does not affect the data (Spark logs). Hence it does not delete/cleanup your Spark logs on the S3 bucket!
 
 ## 4. Access your own SparkHistoryServer
 
@@ -128,14 +128,14 @@ Then the correct url would be in general: `https://<base_url>/sparkhistory/<your
 
 More specificly, for me it would be: `https://kubeflow.at.onplural.sh/sparkhistory/tim-krause`
 
-The only missing part is to configure your SparkSession/SparkApplication, just jump to [correct section](#configure-your-sparksession--sparkapplication-to-upload-logs-to-the-bucketsparkhistoryserver).
+The only missing part is to configure your SparkSession/SparkApplication, just jump to the [correct section](#5-configure-your-sparksession--sparkapplication-to-upload-logs-to-the-bucketsparkhistoryserver).
 
 
-## 5. Using SparkHistoryServer
+## Using SparkHistoryServer
 
 Since the Spark History Server is a kind of collection of all of your SparkUI's, just read the official doc for the [SparkUI](https://spark.apache.org/docs/latest/web-ui.html).
 
-## Configure your SparkSession | SparkApplication to upload logs to the Bucket/SparkHistoryServer
+## 5. Configure your SparkSession | SparkApplication to upload logs to the Bucket/SparkHistoryServer
 
 In order to upload the according logs from your SparkSession or SparkApplication, you need to configure it to do so. What you need to adjust in the following sections, is:
 - the `main_bucket` 
@@ -147,7 +147,7 @@ More specificly, for me it would be: `s3a://at-plural-sh-at-onplural-sh-kubeflow
 
 ### SparkSession
 
-Normally a lot is already configured because you use S3. Then only `spark.eventLog.enabled` and `spark.eventLog.dir` needs to be added by you. However, to make it complete:
+Normally a lot is already configured because you use S3. Then, only `spark.eventLog.enabled` and `spark.eventLog.dir` needs to be added by you. However, to make it complete:
 ```
     .config("spark.hadoop.fs.s3a.aws.credentials.provider", "com.amazonaws.auth.WebIdentityTokenCredentialsProvider")
     .config("spark.eventLog.enabled", "true")
@@ -156,7 +156,7 @@ Normally a lot is already configured because you use S3. Then only `spark.eventL
 
 ### SparkApplication
 
-Normally a lot is already configured because you use S3. Then only `spark.eventLog.enabled` and `spark.eventLog.dir` needs to be added by you. However, to make it complete:
+Normally a lot is already configured because you use S3. Then, only `spark.eventLog.enabled` and `spark.eventLog.dir` needs to be added by you. However, to make it complete:
 ```
 spec:
   sparkConf:
@@ -169,7 +169,7 @@ spec:
 
 ### SparkApplication in KFP (in Kubeflow Pipelines)
 
-Normally a lot is already configured because you use S3. Then only `spark.eventLog.enabled` and `spark.eventLog.dir` needs to be added by you. However, to make it complete:
+Normally a lot is already configured because you use S3. Then, only `spark.eventLog.enabled` and `spark.eventLog.dir` needs to be added by you. However, to make it complete:
 ```
             "sparkConf": {
                     "spark.hadoop.fs.s3a.impl": "org.apache.hadoop.fs.s3a.S3AFileSystem",
@@ -196,7 +196,7 @@ metadata:
   name: sparkhistoryserver
 EOF
 ```
-But the `spec:` field is required. Take a look into the CRD section again!
+But the `spec:` field is required. Take a look into the [CRD section](#3-crd) again!
 
 ### missing required field "image"
 
@@ -213,7 +213,7 @@ spec:
   foo: foo
 EOF
 ```
-But the `image:` field is required. Take a look into the CRD section again and specify the according `image`!
+But the `image:` field is required. Take a look into the [CRD section](#3-crd) again and specify the according `image`!
 
 
 ### FileNotFoundException
