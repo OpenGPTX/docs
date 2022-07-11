@@ -12,9 +12,9 @@ We provide the Spark History Server as a **self-serving service** which means yo
 
 ### 1. Get all dynamic values/variables/names
 
-- The `base_url` from your cluster. Typically it is `kubeflow.at.onplural.sh` but you can extract it from your JupyterLab Notebook url.
+- The `base_url` from your cluster. We assume it is `kubeflow.at.onplural.sh` but change it accordingly in this manual if needed - you can extract it from your JupyterLab Notebook url.
 - The `your_namespace` which is typically `firstname-lastname`. You can get it also in your JupyterLab Notebook with this command: `echo $NAMESPACE`
-- The `main_bucket` from your cluster. Typically it is `at-plural-sh-at-onplural-sh-kubeflow-pipelines` but you can extract it from your JupyterLab Notebook with the following command:
+- The `main_bucket` from your cluster. We assume it is `at-plural-sh-at-onplural-sh-kubeflow-pipelines` but change it accordingly in this manual if needed - but you can extract it from your JupyterLab Notebook with the following command:
 ```
 kubectl get cm  artifact-repositories -o yaml
 ...
@@ -42,9 +42,9 @@ import boto3
 client = boto3.client('s3')
 
 response = client.put_object(
-        Bucket='<main_bucket>',
+        Bucket='at-plural-sh-at-onplural-sh-kubeflow-pipelines', #<main_bucket>
         Body='',
-        Key='pipelines/<your_namespace>/history/'
+        Key=f'pipelines/{os.environ["NAMESPACE"]}/history/'
         )
 ```
 
@@ -153,7 +153,7 @@ Normally a lot is already configured because you use S3. Then, only `spark.event
 ```
     .config("spark.hadoop.fs.s3a.aws.credentials.provider", "com.amazonaws.auth.WebIdentityTokenCredentialsProvider")
     .config("spark.eventLog.enabled", "true")
-    .config("spark.eventLog.dir", "s3a://<main_bucket>/pipelines/<your_namespace>/history")
+    .config("spark.eventLog.dir", f's3a://at-plural-sh-at-onplural-sh-kubeflow-pipelines/pipelines/{os.environ["NAMESPACE"]}/history') #<main_bucket>
 ```
 
 ### SparkApplication
@@ -165,7 +165,7 @@ spec:
     "spark.hadoop.fs.s3a.impl": "org.apache.hadoop.fs.s3a.S3AFileSystem"
     "spark.hadoop.fs.s3a.aws.credentials.provider": "com.amazonaws.auth.WebIdentityTokenCredentialsProvider"
     "spark.eventLog.enabled": "true"
-    "spark.eventLog.dir": "s3a://<main_bucket>/pipelines/<your_namespace>/history"
+    "spark.eventLog.dir": f's3a://at-plural-sh-at-onplural-sh-kubeflow-pipelines/pipelines/{os.environ["NAMESPACE"]}/history' #<main_bucket>
 ```
 
 
@@ -177,7 +177,7 @@ Normally a lot is already configured because you use S3. Then, only `spark.event
                     "spark.hadoop.fs.s3a.impl": "org.apache.hadoop.fs.s3a.S3AFileSystem",
                     "spark.hadoop.fs.s3a.aws.credentials.provider": "com.amazonaws.auth.WebIdentityTokenCredentialsProvider"
                     "spark.eventLog.enabled": "com.amazonaws.auth.WebIdentityTokenCredentialsProvider"
-                    "spark.eventLog.dir": "s3a://<main_bucket>/pipelines/<your_namespace>/history"
+                    "spark.eventLog.dir": f's3a://at-plural-sh-at-onplural-sh-kubeflow-pipelines/pipelines/{os.environ["NAMESPACE"]}/history' #<main_bucket>
             },
 ```
 
