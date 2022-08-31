@@ -11,10 +11,10 @@ Steps to create a notebook server are found [here](https://github.com/KubeSoup/d
 2. Choose one of the below listed images as `Custom Image` as per the requirements.
 
     ```
-    ghcr.io/opengptx/notebook-servers/jupyter-spark:2547792480
-    ghcr.io/opengptx/notebook-servers/jupyter-spark-scipy:2547792480
-    ghcr.io/opengptx/notebook-servers/jupyter-spark-pytorch:2547792480
-    ghcr.io/opengptx/notebook-servers/jupyter-spark-pytorch-cuda:2547792480
+    ghcr.io/opengptx/notebook-servers/jupyter-spark:2963962927
+    ghcr.io/opengptx/notebook-servers/jupyter-spark-scipy:2963962927
+    ghcr.io/opengptx/notebook-servers/jupyter-spark-pytorch:2963962927
+    ghcr.io/opengptx/notebook-servers/jupyter-spark-pytorch-cuda:2963962927
     ```
 3. Choose at least 2 CPU cores and 8GB RAM for spark to function properly. If you intend to load bring large subsets onto the notebooks, more RAM is adviced.
 
@@ -134,7 +134,7 @@ Interactive SparkSession:
 ```
     .config("spark.kubernetes.executor.podTemplateFile", "/opt/spark/conf/pod_toleration_template.yaml")
 ```
-SparkApplication (offcial doc is [here](https://github.com/GoogleCloudPlatform/spark-on-k8s-operator/blob/master/docs/user-guide.md#using-tolerations)):
+SparkApplication (official doc is [here](https://github.com/GoogleCloudPlatform/spark-on-k8s-operator/blob/master/docs/user-guide.md#using-tolerations)):
 ```
 spec:
 ...
