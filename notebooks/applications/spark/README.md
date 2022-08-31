@@ -130,6 +130,7 @@ Depending on the task, one might have different resources to get the job done. F
 For bigger node groups we introduced a so called `taint` which needs to be explicity tollerated in the Spark configuration. Otherwise spark executors won't be scheduled onto. Look into the table above in order to find out which node group needs it.
 
 **Simply add the following config in your Sparksession if your wanted node group is marked with &#10062; - otherwise ignore it:**
+
 Interactive SparkSession:
 ```
     .config("spark.kubernetes.executor.podTemplateFile", "/opt/spark/conf/pod_toleration_template.yaml")
@@ -158,7 +159,7 @@ spec:
     value: "spark-dedicated"
     effect: "NoSchedule"
 ```
-That adds a so called `toleration` to tolerate a `tained` node.
+That adds a so called `toleration` to tolerate a `tained` node. Unfortunately Spark does not support it without a template style at the moment.
 
 ## SparkHistoryServer
 
