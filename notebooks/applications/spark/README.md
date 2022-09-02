@@ -191,3 +191,8 @@ AttributeError: 'ScalaMonitor' object has no attribute 'comm'
 ```
 
 Solution: Shutdown the kernel and close the notebook. Re-opening the notebook and running the cells should fix it.
+
+
+## Culling (auto suspend after long idled notebooks)
+
+Due to costs savings, all notebooks get into supend mode after the kernel is idle for more than 6 hours. You can simply start your notebook within the UI again if needed. If you start your "Feierabend" or weekend, please shut them down manually and do not wait for the culling feature. Our budgets is limited and it is better to use it for calculation and training rather than for idled notebooks.
