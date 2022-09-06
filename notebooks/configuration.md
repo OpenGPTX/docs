@@ -142,4 +142,4 @@ spot)
     Data which is stored on Persistent Storage will not be lost. Spot
     instances are ideal for performing pipeline tasks.
 
--   Big Notebooks: Under `Tolerations Group` select `Big Notebooks` if you need a lot CPU/RAM. (Due to cost savings it is not possible to use those without the `Tolerations Group` anymore.)
+-   Big Notebooks: Under `Tolerations Group` select `Big Notebooks` if you need a lot CPU/RAM.
