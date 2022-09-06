@@ -11,10 +11,10 @@ Steps to create a notebook server are found [here](https://github.com/KubeSoup/d
 2. Choose one of the below listed images as `Custom Image` as per the requirements.
 
     ```
-    ghcr.io/opengptx/notebook-servers/jupyter-spark:2547792480
-    ghcr.io/opengptx/notebook-servers/jupyter-spark-scipy:2547792480
-    ghcr.io/opengptx/notebook-servers/jupyter-spark-pytorch:2547792480
-    ghcr.io/opengptx/notebook-servers/jupyter-spark-pytorch-cuda:2547792480
+    ghcr.io/opengptx/notebook-servers/jupyter-spark:2963962927
+    ghcr.io/opengptx/notebook-servers/jupyter-spark-scipy:2963962927
+    ghcr.io/opengptx/notebook-servers/jupyter-spark-pytorch:2963962927
+    ghcr.io/opengptx/notebook-servers/jupyter-spark-pytorch-cuda:2963962927
     ```
 3. Choose at least 2 CPU cores and 8GB RAM for spark to function properly. If you intend to load bring large subsets onto the notebooks, more RAM is adviced.
 
@@ -62,6 +62,7 @@ Steps to create a notebook server are found [here](https://github.com/KubeSoup/d
         # They need to be in the same zone
         .config("spark.kubernetes.node.selector.topology.ebs.csi.aws.com/zone", "eu-central-1a") # node selector
         .config("spark.kubernetes.node.selector.plural.sh/scalingGroup", "xlarge-mem-optimized-on-demand") # node selector, read "Node Groups for the Spark Executors"
+        # .config("spark.kubernetes.executor.podTemplateFile", "/opt/spark/conf/pod_toleration_template.yaml") # needed for bigger nodes to schedule Spark Executors on
         .config("spark.executor.instances", "2") # number of Executors
         .config("spark.executor.memory", "3g") # Executor memory
         .config("spark.executor.cores", "1") # Executor cores
@@ -116,13 +117,49 @@ Depending on the task, one might have different resources to get the job done. F
   - We use 2 spark-executors each 3Cores and 26GB RAM: it spins up 2 VM's like our initial example but you get a lot more power in your SparkSession and the utilization of the VM's is very good.
   - **All in all**, try to avoid using 50% of the VM resources per spark-executors, it idles the VM a lot!
 
-| Group                              | Demand Type | Instances                                                | Cores | RAM (GB) | Max Cores in SparkSession | Max RAM in SparkSession | Local NVMe Storage (GB) |
-| ---------------------------------- | ----------- | -------------------------------------------------------- | ----- | -------- | ------------------------- | ----------------------- | ----------------------- |
-| xlarge-mem-optimized-on-demand     | On-Demand   | r5.xlarge, r5a.xlarge, r5b.xlarge, r5n.xlarge, r4.xlarge | 4     | 32       | 3                         | 26gb                    | N/A                     |
-| large-mem-optimized-nvme-on-demand | On-Demand   | r5d.large, r5ad.large, r5dn.large                        | 2     | 16       | 1                         | 13gb                    | 75                      |
-| xlarge-max-mem-optimized-on-demand | On-Demand   | x1e.xlarge                                               | 4     | 122      | 3                         | 106gb                   | N/A                     |
-| m68xlarge-general-on-demand        | On-Demand   | m6a.8xlarge                                              | 32    | 128      | 31                        | 90gb                    | N/A                     |
-| c5a16xlarge-compute-on-demand      | On-Demand   | c5a.16xlarge                                             | 64    | 128      | 61                        | 90gb                    | N/A                     |
+| Group                              | Demand Type | Instances                                                | Cores | RAM (GB) | Max Cores in SparkSession | Max RAM in SparkSession | Local NVMe Storage (GB) | Toleration needed? &#10062; = yes |
+| ---------------------------------- | ----------- | -------------------------------------------------------- | ----- | -------- | ------------------------- | ----------------------- | ----------------------- | --------------------------------- |
+| xlarge-mem-optimized-on-demand     | On-Demand   | r5.xlarge, r5a.xlarge, r5b.xlarge, r5n.xlarge, r4.xlarge | 4     | 32       | 3                         | 26gb                    | N/A                     |                                   |
+| large-mem-optimized-nvme-on-demand | On-Demand   | r5d.large, r5ad.large, r5dn.large                        | 2     | 16       | 1                         | 13gb                    | 75                      |                                   |
+| xlarge-max-mem-optimized-on-demand | On-Demand   | x1e.xlarge                                               | 4     | 122      | 3                         | 106gb                   | N/A                     | &#10062;                          |
+| m68xlarge-general-on-demand        | On-Demand   | m6a.8xlarge                                              | 32    | 128      | 31                        | 90gb                    | N/A                     | &#10062;                          |
+| c5a16xlarge-compute-on-demand      | On-Demand   | c5a.16xlarge                                             | 64    | 128      | 61                        | 90gb                    | N/A                     | &#10062;                          |
+
+### Adding Toleration for &#10062;
+
+For bigger node groups we introduced a so called `taint` which needs to be explicity tollerated in the Spark configuration. Otherwise spark executors won't be scheduled onto. Look into the table above in order to find out which node group needs it.
+
+**Simply add the following config in your Sparksession if your wanted node group is marked with &#10062; - otherwise ignore it:**
+
+Interactive SparkSession:
+```
+    .config("spark.kubernetes.executor.podTemplateFile", "/opt/spark/conf/pod_toleration_template.yaml")
+```
+SparkApplication (official doc is [here](https://github.com/GoogleCloudPlatform/spark-on-k8s-operator/blob/master/docs/user-guide.md#using-tolerations)):
+```
+spec:
+...
+  executor:
+    tolerations:
+    - key: kubesoup.com/tier
+      operator: Equal
+      value: spark-dedicated
+      effect: NoSchedule
+```
+
+Optional background information:
+```
+cat /opt/spark/conf/pod_toleration_template.yaml
+apiVersion: v1
+kind: Pod
+spec:
+  tolerations:
+  - key: "kubesoup.com/tier"
+    operator: "Equal"
+    value: "spark-dedicated"
+    effect: "NoSchedule"
+```
+That adds a so called `toleration` to tolerate a `tained` node. Unfortunately Spark does not support it without a template style at the moment.
 
 ## SparkHistoryServer
 
@@ -154,3 +191,8 @@ AttributeError: 'ScalaMonitor' object has no attribute 'comm'
 ```
 
 Solution: Shutdown the kernel and close the notebook. Re-opening the notebook and running the cells should fix it.
+
+
+## Culling (auto suspend after long idled notebooks)
+
+Due to costs savings, all notebooks get into suspend mode after the kernel is idle for more than 6 hours. You can simply start your notebook within the UI again if needed. If you start your "Feierabend" or weekend, please shut them down manually and do not wait for the culling feature. Our budgets is limited and it is better to use it for calculation and training rather than for idled notebooks.

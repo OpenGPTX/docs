@@ -141,3 +141,5 @@ spot)
     type is suitable for any kind of workload that are safe to interrupt.
     Data which is stored on Persistent Storage will not be lost. Spot
     instances are ideal for performing pipeline tasks.
+
+-   Big Notebooks: Under `Tolerations Group` select `Big Notebooks` if you need a lot CPU/RAM.
