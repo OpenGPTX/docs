@@ -53,7 +53,7 @@ response = client.put_object(
 It is very convenient to spin up your Spark History Server. From your JupyterLab Notebook **Terminal**, simply apply:
 ```
 cat <<EOF | kubectl apply -f -
-apiVersion: kubricks.kubricks.io/v1
+apiVersion: platform.kubesoup.io/v1
 kind: SparkHistoryServer
 metadata:
   name: sparkhistoryserver
@@ -69,7 +69,7 @@ In the background it adds automatically a lot of default confgurations. Be caref
 
 `kubectl get SparkHistoryServer sparkhistoryserver -o yaml`:
 ```
-apiVersion: kubricks.kubricks.io/v1
+apiVersion: platform.kubesoup.io/v1
 kind: SparkHistoryServer
 metadata:
   name: sparkhistoryserver
@@ -187,12 +187,12 @@ Normally a lot is already configured because you use S3. Then, only `spark.event
 
 ### missing required field "spec"
 
-**error: error validating "STDIN": error validating data: ValidationError(SparkHistoryServer): missing required field "spec" in io.kubricks.kubricks.v1.SparkHistoryServer; if you choose to ignore these errors, turn validation off with --validate=false**
+**error: error validating "STDIN": error validating data: ValidationError(SparkHistoryServer): missing required field "spec" in io.platform.kubesoup.v1.SparkHistoryServer; if you choose to ignore these errors, turn validation off with --validate=false**
 
 Probably you only specified something like:
 ```
 cat <<EOF | kubectl apply -f -
-apiVersion: kubricks.kubricks.io/v1
+apiVersion: platform.kubesoup.io/v1
 kind: SparkHistoryServer
 metadata:
   name: sparkhistoryserver
@@ -202,12 +202,12 @@ But the `spec:` field is required. Take a look into the [CRD section](#3-crd) ag
 
 ### missing required field "image"
 
-**error: error validating "STDIN": error validating data: [ValidationError(SparkHistoryServer.spec): unknown field "foo" in io.kubricks.kubricks.v1.SparkHistoryServer.spec, ValidationError(SparkHistoryServer.spec): missing required field "image" in io.kubricks.kubricks.v1.SparkHistoryServer.spec]; if you choose to ignore these errors, turn validation off with --validate=false**
+**error: error validating "STDIN": error validating data: [ValidationError(SparkHistoryServer.spec): unknown field "foo" in io.platform.kubesoup.v1.SparkHistoryServer.spec, ValidationError(SparkHistoryServer.spec): missing required field "image" in io.platform.kubesoup.v1.SparkHistoryServer.spec]; if you choose to ignore these errors, turn validation off with --validate=false**
 
 Probably you only specified something like:
 ```
 cat <<EOF | kubectl apply -f -
-apiVersion: kubricks.kubricks.io/v1
+apiVersion: platform.kubesoup.io/v1
 kind: SparkHistoryServer
 metadata:
   name: sparkhistoryserver
