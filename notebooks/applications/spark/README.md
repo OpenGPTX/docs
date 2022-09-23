@@ -122,7 +122,7 @@ Depending on the task, one might have different resources to get the job done. F
 | xlarge-mem-optimized-on-demand     | On-Demand   | r5.xlarge, r5a.xlarge, r5b.xlarge, r5n.xlarge, r4.xlarge | 4     | 32       | 3                         | 26gb                    | N/A                     |                                   |
 | large-mem-optimized-nvme-on-demand | On-Demand   | r5d.large, r5ad.large, r5dn.large                        | 2     | 16       | 1                         | 13gb                    | 75                      |                                   |
 | xlarge-max-mem-optimized-on-demand | On-Demand   | x1e.xlarge                                               | 4     | 122      | 3                         | 106gb                   | N/A                     | &#10062;                          |
-| m68xlarge-general-on-demand        | On-Demand   | m6a.8xlarge                                              | 32    | 128      | 31                        | 90gb                    | N/A                     | &#10062;                          |
+| m68xlarge-general-on-demand        | On-Demand   | m6a.8xlarge                                              | 32    | 128      | 30                        | 90gb                    | N/A                     | &#10062;                          |
 | c5a16xlarge-compute-on-demand      | On-Demand   | c5a.16xlarge                                             | 64    | 128      | 61                        | 90gb                    | N/A                     | &#10062;                          |
 
 ### Adding Toleration for &#10062;
@@ -135,6 +135,24 @@ Interactive SparkSession:
 ```
     .config("spark.kubernetes.executor.podTemplateFile", "/opt/spark/conf/pod_toleration_template.yaml")
 ```
+
+Kubeflow Pipeline: Put inside both "driver" and "executor" dictionary as shown below.
+```
+"executor": {
+    "cores": executor_cores,
+    "instances": executor_instances,
+    "memory": f"{executor_memory_gb}G",
+    "tolerations": [
+        {
+        "key": "kubesoup.com/tier",
+        "operator": "Equal",
+        "value": "spark-dedicated",
+        "effect": "NoSchedule",
+        },
+    ]
+}
+```
+
 SparkApplication (official doc is [here](https://github.com/GoogleCloudPlatform/spark-on-k8s-operator/blob/master/docs/user-guide.md#using-tolerations)):
 ```
 spec:
