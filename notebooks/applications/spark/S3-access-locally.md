@@ -9,7 +9,7 @@ Out of the box, you only have access on S3 via your JupyterLab in the Kubeflow d
 - This manual requires Linux (e.g. Ubuntu) but perhaps can be adjusted also for Windows
 - Aws cli is installed
 - You have a user on our Kubeflow platform
-- You have a JupyterLab in the Kubeflow dashboard
+- You have a JupyterLab in the Kubeflow dashboard (in order to extract the token)
 - The JupyterLab has according permissions to access the S3 buckets you want to use (handled via IRSA)
 
 ## Gather information
@@ -24,10 +24,12 @@ AWS_REGION=eu-central-1
 AWS_ROLE_ARN=arn:aws:iam::776604912447:role/at-onplural-sh-kubeflow-assumable-role-ns-tim-krause
 AWS_WEB_IDENTITY_TOKEN_FILE=/var/run/secrets/eks.amazonaws.com/serviceaccount/token
 ```
-For the "Setup" later, you need to add `export ` infront of all environmental variables.
-2. Get a fresh token (**Needs to be done every day**):
+For the "Setup" later, you need to add `export ` (with a space) infront of all environmental variables.
+
+2. Get a fresh token (**Needs to be done every day!**):
 ```
 cat /var/run/secrets/eks.amazonaws.com/serviceaccount/token
+<you-get-the-token>
 ```
 
 ## Setup
