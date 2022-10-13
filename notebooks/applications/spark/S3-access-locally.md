@@ -29,7 +29,7 @@ For the "Setup" later, you need to add `export ` (with a space) infront of all e
 2. Get a fresh token (**Needs to be done every day!**):
 ```
 cat /var/run/secrets/eks.amazonaws.com/serviceaccount/token
-<you-get-the-token>
+<you-get-the-token-here>
 ```
 
 ## Setup
@@ -41,21 +41,23 @@ export AWS_REGION=eu-central-1
 export AWS_ROLE_ARN=arn:aws:iam::776604912447:role/at-onplural-sh-kubeflow-assumable-role-ns-tim-krause
 export AWS_WEB_IDENTITY_TOKEN_FILE=/var/run/secrets/eks.amazonaws.com/serviceaccount/token
 ```
-In case you want to add that permanently, add it at the bottom of `~/.bashrc` e.g. with `vi` editor. **Restart your terminal that it gets loaded!**
-2. Insert a new token (**The second command needs to be done everyday or if the token is expired**)
+In case you want to add that permanently in order to avoid that step in the future, add it at the bottom of `~/.bashrc` e.g. with the `vi` editor. **Restart your terminal that it gets loaded!**
+
+2. Insert a new token (**The second command needs to be done everyday or if the token is expired!**)
 ```
-# Create
+# Create the folders:
 sudo mkdir -p /var/run/secrets/eks.amazonaws.com/serviceaccount/
 
-# This needs to be done everyday or if the token changes:
+# This needs to be done everyday or if the token changes - don't forget to use the new token you got in "Gather information":
 sudo bash -c 'cat << EOF > /var/run/secrets/eks.amazonaws.com/serviceaccount/token 
 eyJhbGciOiJSUzI1NiIsImtpA0N2E4MDIwNWZjZDY5ODY3ZWI0OWExOWE3NzE2Zjg4Y2U0MmQifQ.eyJhdWQiOlsic3RzLmImlzcyI6Imh0dHBzOi8vb2lkYy5la3MuZXUtY2VudHJhbC0xLmFtYXpvbmF3cy5jb20vaWQvOEYyRkFBNDg0NjAzQzQ0NEI4MzE3Qzk2NUIyOUM0OEIiLCJrdWJlcm5ldGVzLmlvIjp7Im5hbWVzcGFjZSI6Im5vcmZXJ2aWNlYWNjb3VudCI6eyJuYW1lIjoiZGVmYXVsdC1lZGl0b3IiLCJ1aWQiOiI2OTZlZjk2OC02YjU2LTQ0NzktYTc5Yi0xZDI0ZmMzNzdjZjkifX0sIm5iZiI6MTY2NTAzODk1Miwic3ViIjoic3lzdGVtOnNlcnZpY2VhY2NvdW50Om5vcmEtZWljaGZlbGR0OmRlZmF1bHQtZWRpdG9yIn0.oSWfBdOkKK0S8Uo1ARAmeQEl4wZiyXADupzhi_Fg7xKhB-OoQKXJO_MEchKEGeAS3GkVtNexFVGHj_pTWmwNuXG3h3aqLSx0JgUKMtZHjPahVl-loQChulWp5RSjvSUpekWt08Tnm_b-9JemTcKOB2PrR64WL-5r16XuSLFAo6-Ox4C4c0rSUcp3hjSQBHgXB9R6dYwCDTW4BhqpDb2GcLXGv73Z1ODNuivzWYtx9be6A3xLg4d0vO--KHJ2Z9-V38P4llA
 EOF'
 
-#See the content, just to be sure:
+# See the content, just to be sure:
 cat /var/run/secrets/eks.amazonaws.com/serviceaccount/token
 ```
 3. Verification:
 ```
 aws s3 ls s3://opengptx/
+# You should see the folders of the bucket here.
 ```
