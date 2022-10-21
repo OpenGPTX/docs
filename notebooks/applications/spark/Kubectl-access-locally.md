@@ -10,13 +10,13 @@ Out of the box, you only have `kubectl` via your Terminal from the JupyterLab in
 - Kubectl is installed
 - You have a user on our Kubeflow platform
 - You have a JupyterLab in the Kubeflow dashboard (in order to extract the token)
-- The JupyterLab has according permissions (is automatically handled via RBAC of the ServiceAccount `kubeflow-editor`)
+- The JupyterLab has according permissions (is automatically handled via RBAC of the ServiceAccount `default-editor`)
 
 ## Gather information
 
 In a terminal of your JupyterLab, run the following commands.
 
-1. Get the token from your serviceaccount `kubeflow-editor` (**Needs to be done every day!**):
+1. Get the token from your serviceaccount `default-editor` (**Needs to be done every day!**):
 ```
 TOKENNAME=`kubectl get serviceaccount/default-editor -o jsonpath='{.secrets[0].name}'`
 echo $TOKENNAME #Verification
