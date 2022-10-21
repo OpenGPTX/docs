@@ -28,7 +28,7 @@ echo $CA #You need it for the setup later
 2. Get your namespace and adjust it accordingly in this manual:
 ```
 echo $NAMESPACE
-tim-krause
+tim-krause #Typically it is your firstname-lastname
 ```
 
 ## Setup
@@ -55,7 +55,7 @@ kubectl config set-context kf6 --cluster=kf6
 kubectl config set-credentials user --token=$TOKEN
 kubectl config set-context kf6 --user=user
 kubectl config use-context kf6
-kubectl config set-context --current --namespace=tim-krause
+kubectl config set-context --current --namespace=tim-krause #Remember to adjust it to your namespace!
 ```
 3. Insert a new token (**This command needs to be done everyday or if the token is expired!**)
 ```
