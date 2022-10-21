@@ -22,7 +22,7 @@ TOKENNAME=`kubectl get serviceaccount/default-editor -o jsonpath='{.secrets[0].n
 echo $TOKENNAME #Verification
 TOKEN=`kubectl get secret $TOKENNAME -o jsonpath='{.data.token}'| base64 --decode`
 echo $TOKEN #You need it for the setup later
-CA=`kubectl get secret $TOKENNAME -o jsonpath='{.data.ca\.crt}'| base64 --decode`
+CA=`kubectl get secret $TOKENNAME -o jsonpath='{.data.ca\.crt}'`
 echo $CA #You need it for the setup later
 ```
 2. Get your namespace and adjust it accordingly in this manual:
