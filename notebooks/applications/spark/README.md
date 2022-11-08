@@ -179,6 +179,10 @@ spec:
 ```
 That adds a so called `toleration` to tolerate a `tained` node. Unfortunately Spark does not support it without a template style at the moment.
 
+## Magic Committer (for Spark on S3)
+
+It is highly recommended to enable the Magic Committer in your SparkSessions when writing with Spark on S3 because it speeds up writing by up to x10! The manual can be found [here](https://github.com/KubeSoup/docs/blob/main/notebooks/applications/spark/Magic-Committer-Spark-S3.md).
+
 ## SparkHistoryServer
 
 For logging, monitoring and debugging your SparkSessions and/or your SparkApplications take a look into our SparkHistoryServer [manual](https://github.com/KubeSoup/docs/blob/main/notebooks/applications/spark/SparkHistoryServer.md).
