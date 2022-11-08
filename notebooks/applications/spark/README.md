@@ -138,10 +138,20 @@ Interactive SparkSession:
 
 Kubeflow Pipeline: Put inside both "driver" and "executor" dictionary as shown below.
 ```
+"driver": {
+    ...
+    "tolerations": [
+        {
+        "key": "kubesoup.com/tier",
+        "operator": "Equal",
+        "value": "spark-dedicated",
+        "effect": "NoSchedule",
+        },
+    ]
+}
+...
 "executor": {
-    "cores": executor_cores,
-    "instances": executor_instances,
-    "memory": f"{executor_memory_gb}G",
+    ...
     "tolerations": [
         {
         "key": "kubesoup.com/tier",
@@ -152,17 +162,43 @@ Kubeflow Pipeline: Put inside both "driver" and "executor" dictionary as shown b
     ]
 }
 ```
+```
+# Don't forget, according nodeGroup/scalingGroup needs to be defined via this config:
+    resource = {
+        ...
+        "spec": {
+            ...
+            "sparkConf": {
+                ...
+                "spark.kubernetes.node.selector.plural.sh/scalingGroup": "c5a16xlarge-compute-on-demand",
+            },
+```
 
 SparkApplication (official doc is [here](https://github.com/GoogleCloudPlatform/spark-on-k8s-operator/blob/master/docs/user-guide.md#using-tolerations)):
 ```
 spec:
 ...
-  executor:
+  driver:
+    ...
     tolerations:
     - key: kubesoup.com/tier
       operator: Equal
       value: spark-dedicated
       effect: NoSchedule
+  ...
+  executor:
+    ...
+    tolerations:
+    - key: kubesoup.com/tier
+      operator: Equal
+      value: spark-dedicated
+      effect: NoSchedule
+```
+```
+# Don't forget, according nodeGroup/scalingGroup needs to be defined via this config:
+  sparkConf:
+    ...
+    "spark.kubernetes.node.selector.plural.sh/scalingGroup": "c5a16xlarge-compute-on-demand"
 ```
 
 Optional background information:
