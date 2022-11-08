@@ -196,6 +196,8 @@ spec:
 ```
 ```
 # Don't forget, according nodeGroup/scalingGroup needs to be defined via this config:
+spec:
+...
   sparkConf:
     ...
     "spark.kubernetes.node.selector.plural.sh/scalingGroup": "c5a16xlarge-compute-on-demand"
