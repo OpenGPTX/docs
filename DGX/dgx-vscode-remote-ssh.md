@@ -12,6 +12,7 @@ You can use it for running python, model training, Spark and more on powerful ha
 
 - This manual is based on Linux but can be adapted also for another OS
 - We assume you already installed Visual Studio Code (vscode)
+- You have access on the DGX node via public/private ssh keys
 
 ## Set up everyting
 
