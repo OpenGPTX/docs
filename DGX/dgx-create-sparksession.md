@@ -1,6 +1,6 @@
-# Spark Setup
+# Create a SparkSession on DGX
 
-This doc outlines the steps necessary to setup Spark with Delta Lake on Kubeflow. It allows running Spark jobs inside the notebooks.
+This doc shows how to use Spark on the DGX node and mentions DGX related specifics.
 
 ## YOU ARE NOT ALONE
 

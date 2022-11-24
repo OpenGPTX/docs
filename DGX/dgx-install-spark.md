@@ -32,7 +32,7 @@ echo "export PATH=$PATH:$SPARK_HOME/bin:$SPARK_HOME/sbin" >> ~/.profile
 echo "export PYSPARK_PYTHON=/usr/bin/python3" >> ~/.profile
 source ~/.profile
 ```
-- Lastly install the according python package with pip:
+- Lastly, install the according python package with pip:
 ```
 pip install --user pyspark==3.3.0
 ```
@@ -48,7 +48,6 @@ exit()
 We recommend at least S3 dependencies.
 ```
 wget https://repo1.maven.org/maven2/org/apache/hadoop/hadoop-aws/3.3.2/hadoop-aws-3.3.2.jar -O $HOME/spark/jars/hadoop-aws-3.3.2.jar
-
 ```
 
 ## Upgrade Spark version
@@ -73,7 +72,7 @@ tar xvf spark-3.3.0-bin-hadoop3.tgz
 rm spark-3.3.0-bin-hadoop3.tgz
 mv spark-3.3.0-bin-hadoop3 $HOME/spark
 ```
-- Lastly install the according python package with pip:
+- Lastly, install the according python package with pip:
 ```
 pip install --user pyspark==3.3.0
 ```
