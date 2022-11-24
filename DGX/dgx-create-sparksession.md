@@ -22,6 +22,9 @@ Minimal SparkSession:
 ```
 from pyspark.sql import SparkSession
 
+import os
+home = os.environ["HOME"]
+
 spark = SparkSession \
     .builder \
     .appName("My SparkSession") \
@@ -54,9 +57,9 @@ Ram can be adjusted with driver memory like:
 
 It makes sense to use a tmp storage in your user folder. Simply create the folder and then you can configure spark to use that:
 ```
-mkdir ${HOME}/sparktmp
+mkdir $HOME/sparktmp
 
-    .config("spark.local.dir", "${HOME}/sparktmp/") \
+    .config("spark.local.dir", f"{home}/sparktmp/") \
 ```
 In case you need more than <1.8TB ("<" means possibly it can be up to 1.8 TB but the amount decreases when other users have some data somewhere on that disk) tmp storage, you can also switch to `/raid` which has up to 30 TB storage. For transperency, please create a directory for you:
 ```
@@ -69,7 +72,7 @@ mkdir /raid/your-user/sparktmp
 
 There is no automatic IRSA S3 authorization. Instead you need to use S3 access-key and secret-key like:
 ```
-    .config("spark.jars", "/opt/spark/jars/hadoop-aws-3.3.2.jar,/opt/spark/jars/aws-java-sdk-bundle-1.11.1026.jar") \
+    .config("spark.jars", f"{home}/spark/jars/hadoop-aws-3.3.2.jar,{home}/spark/jars/aws-java-sdk-bundle-1.11.1026.jar") \
     .config("spark.hadoop.fs.s3a.impl", "org.apache.hadoop.fs.s3a.S3AFileSystem") \
     .config("spark.hadoop.fs.s3a.access.key", "*******") \
     .config("spark.hadoop.fs.s3a.secret.key", "**************") \
