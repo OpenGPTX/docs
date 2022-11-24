@@ -16,8 +16,9 @@ A lot of useful Spark configs can be found in our well known [doc](https://githu
 
 ## Create a notebook Server
 
-First of all, there is no cluster and no scheduler anymore. We are dealing the the so called "deploy-mode=client" and the "cluster" is so to say "local". This means, the driver is the master and executor at the same time. So you can completely ignore `spark.executor.*` configs. And the config `spark.driver.cores` has no effect and instead it needs to be `.config("spark.master", "local[32]")` for 32 cores (in order to limit cores).
+First of all, there is no cluster and no scheduler anymore. We are dealing with the so called "deploy-mode=client" and the "cluster" is so to say "local". This means, the driver is the master and executor at the same time. So you can completely ignore `spark.executor.*` configs. And the config `spark.driver.cores` has no effect and instead it needs to be `.config("spark.master", "local[32]")` for 32 cores (in order to limit cores).
 
+Minimal SparkSession:
 ```
 from pyspark.sql import SparkSession
 
@@ -53,11 +54,11 @@ Ram can be adjusted with driver memory like:
 
 It makes sense to use a tmp storage in your user folder. Simply create the folder and then you can configure spark to use that:
 ```
-mkdir /home/your-user/sparktmp
+mkdir ${HOME}/sparktmp
 
-    .config("spark.local.dir", "/home/your-user/sparktmp/") \
+    .config("spark.local.dir", "${HOME}/sparktmp/") \
 ```
-In case you need more than <1.8TB ("<" means possibly it can be up to 1.8 TB but the amount decreases when other users have some data somewhere on that disk) tmp storage, you can also switch to `/raid` which has up to 30 TB storage. For transperency, please create a directory fo your
+In case you need more than <1.8TB ("<" means possibly it can be up to 1.8 TB but the amount decreases when other users have some data somewhere on that disk) tmp storage, you can also switch to `/raid` which has up to 30 TB storage. For transperency, please create a directory for you:
 ```
 mkdir /raid/your-user/sparktmp
 

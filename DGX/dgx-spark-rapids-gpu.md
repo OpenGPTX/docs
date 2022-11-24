@@ -1,6 +1,6 @@
 # Spark-rapids: Spark with GPU on DGX
 
-This documentation gives an overview how to use the DGX with Spark and GPUs. The technoligy is called spark-rapids. It gives you a brief overview how to set up everything.
+This documentation gives an overview how to use the DGX with Spark and GPUs. The technology is called spark-rapids. It gives you a brief overview how to set up everything.
 ## Official documentation
 
 - The official doc of spark-rapids can be found [here](https://nvidia.github.io/spark-rapids/) 
@@ -15,7 +15,7 @@ This documentation gives an overview how to use the DGX with Spark and GPUs. The
 ```
 wget https://repo1.maven.org/maven2/com/nvidia/rapids-4-spark_2.12/22.10.0/rapids-4-spark_2.12-22.10.0.jar -O $HOME/spark/jars/rapids-4-spark_2.12-22.10.0.jar
 ```
-- It is needed to have the `getGpusResources.sh`:
+- It is needed to have the `getGpusResources.sh` as well:
 ```
 mkdir $HOME/spark/sparkRapidsPlugin
 wget https://github.com/apache/spark/blob/master/examples/src/main/scripts/getGpusResources.sh -O $HOME/spark/sparkRapidsPlugin/getGpusResources.sh
