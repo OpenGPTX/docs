@@ -15,6 +15,7 @@ The whole USM (user management) is fully automated with Ansible in our [dgx-setu
 
 ## Recommended order of documentation
 
+Of course, you can pick the documentation you need, but we recommend the following order:
 1. [Vscode remote-ssh development](https://github.com/KubeSoup/docs/blob/main/DGX/dgx-vscode-remote-ssh.md)
 2. [Install Spark on DGX](https://github.com/KubeSoup/docs/blob/main/DGX/dgx-install-spark.md)
 3. [Create a SparkSession on DGX](https://github.com/KubeSoup/docs/blob/main/DGX/dgx-create-sparksession.md)

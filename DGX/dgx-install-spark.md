@@ -4,7 +4,7 @@
 
 Every Spark version has its own dependencies and features. Not everything is backwards compatible. The Spark version also has a huge dependency how to configure SparkSessions. On the one hand, we always try to be at the latest Spark version in order to benefit from the latest features and bug fixes. On the other hand, we have a lot potential users who cannot be synchronized to one Spark version in a very short time because potentially every SparkApp has different efforts in migrating to the next Spark version.
 
-That is why every use needs to take of installing Spark for his/her own user itself. Also upgrading/migrating falls into the responsiblity of the users.
+That is why every user needs to take of installing Spark for his/her own user themself. Also upgrading/migrating falls into the responsiblity of the users.
 
 But no worries. This manual is used to provide easy steps about installing and upgrading spark including some dependency management.
 
@@ -12,7 +12,7 @@ But no worries. This manual is used to provide easy steps about installing and u
 
 - [Here](https://spark.apache.org/downloads.html) is the official download page. You can get the download urls there. It automatically shows the latest version.
 - Spark-rapids (for gpu support) is currently only compatible with Spark version `3.3.0` 
-- So the archive can be found [here](https://archive.apache.org/dist/spark/spark-3.3.0/) as an example where we need `spark-3.3.0-bin-hadoop3.tgz`
+    - So the archive can be found [here](https://archive.apache.org/dist/spark/spark-3.3.0/) as an example where we need `spark-3.3.0-bin-hadoop3.tgz`
 - You are in your home directory:
 ```
 cd ~
