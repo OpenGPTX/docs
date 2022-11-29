@@ -29,8 +29,8 @@ For more info and details look into [On-Prem](https://nvidia.github.io/spark-rap
 Add at least the following config to your SparkSession:
 ```
     .config("spark.plugins", "com.nvidia.spark.SQLPlugin") \
-    .config("spark.worker.resource.gpu.discoveryScript", f"{home}/spark/sparkRapidsPlugin/getGpusResources.sh) \
-    .config("jars", f"{home}/spark/jars/rapids-4-spark_2.12-22.10.0.jar") \
+    .config("spark.worker.resource.gpu.discoveryScript", f"{HOME}/spark/sparkRapidsPlugin/getGpusResources.sh) \
+    .config("jars", f"{HOME}/spark/jars/rapids-4-spark_2.12-22.10.0.jar") \
 ```
 
 All configs can be found in the official [doc](https://nvidia.github.io/spark-rapids/docs/configs.html).
