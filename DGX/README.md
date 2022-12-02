@@ -20,6 +20,8 @@ Of course, you can pick the documentation you need, but we recommend the followi
 2. [Install Spark on DGX](https://github.com/KubeSoup/docs/blob/main/DGX/dgx-install-spark.md)
 3. [Create a SparkSession on DGX](https://github.com/KubeSoup/docs/blob/main/DGX/dgx-create-sparksession.md)
 4. [Spark-rapids: Spark with GPU on DGX](https://github.com/KubeSoup/docs/blob/main/DGX/dgx-spark-rapids-gpu.md)
+5. [Spark History Server](https://github.com/KubeSoup/docs/blob/main/DGX/dgx-spark-history-server.md)
+
 
 ## DGX Hardware
 

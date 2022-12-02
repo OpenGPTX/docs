@@ -68,6 +68,10 @@ mkdir /raid/your-user/sparktmp
     .config("spark.local.dir", "/raid/your-user/sparktmp/") \
 ```
 
+## Spark History Server
+
+[here](https://github.com/KubeSoup/docs/blob/main/DGX/dgx-spark-history-server.md) is the manual for setting up and configuring the Spark History Server.
+
 ### S3 Auth
 
 There is no automatic IRSA S3 authorization. Instead you need to use S3 access-key and secret-key like:
