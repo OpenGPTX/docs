@@ -1,9 +1,25 @@
 
 # Metadata Management
 
+We realized everyone started creating metadata with different structure and on different locations without considering different aspects. That is why we want to collect best practices, technolgies and tools keeping our project needs in mind.
+This document is about metadata management for the datasets (not for trainings, models, ...).
+
 ## In short
 
 
+
+
+## Example structure
+
+```
+
+```
+
+## Example code
+
+```
+
+```
 
 
 
@@ -35,7 +51,7 @@ Hence the file format JSON is the best option in our context to store metadata.
 
 ## Programming language
 
-Since we heavily rely on Spark as a distributed compute engine to process the datasets, at a first glance it looks like it should be also used for metadata management. But it has a lot disadvanatges by design. Writing JSON with spark by using `dataframe.write.json("metadata.json")` actually write JSONL and not JSON which makes it harder to read the file with other languages. There are ways (like [here](https://stackoverflow.com/questions/58238563/write-spark-dataframe-as-array-of-json-pyspark) and [here](https://stackoverflow.com/questions/48503419/spark-dataframe-serialized-as-invalid-json)) to workaround this but it is quite complex and not that easy to understand.
+Since we heavily rely on Spark as a distributed compute engine to process the datasets, at a first glance it looks like it should be also used for metadata management. But it has a lot disadvanatges by design. Writing JSON with spark by using `dataframe.write.json("metadata.json")` actually writes JSONL and not JSON which makes it harder to read the file with other languages. There are ways (like [here](https://stackoverflow.com/questions/58238563/write-spark-dataframe-as-array-of-json-pyspark) and [here](https://stackoverflow.com/questions/48503419/spark-dataframe-serialized-as-invalid-json)) to workaround this but it is quite complex and not that easy to understand.
 
 However, we are already close to Python due to using PySpark to execute Spark. Python can easily process JSON and can easily upload files onto S3.
 
