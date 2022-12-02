@@ -51,8 +51,15 @@ We recommend at least S3 dependencies.
 ```
 wget https://repo1.maven.org/maven2/org/apache/hadoop/hadoop-aws/3.3.2/hadoop-aws-3.3.2.jar -O $HOME/spark/jars/hadoop-aws-3.3.2.jar
 wget https://repo1.maven.org/maven2/com/amazonaws/aws-java-sdk-bundle/1.11.1026/aws-java-sdk-bundle-1.11.1026.jar -O $HOME/spark/jars/aws-java-sdk-bundle-1.11.1026.jar
-wget https://repo1.maven.org/maven2/com/amazonaws/aws-java-sdk-bundle/1.12.332/aws-java-sdk-bundle-1.12.332.jar -O $HOME/spark/jars/aws-java-sdk-bundle-1.12.332.jar 
 ```
+
+The dependency management with Spark can be tricky and confusing. Just an example for the S3 dependencies:
+- Spark 3.3.0 has out of the box hadoop version 3.3.2 included (that is why we need `hadoop-aws-3.3.2.jar` and not `hadoop-aws-3.3.0.jar`):
+```
+ls -la ~/spark/jars | grep hadoop
+hadoop-client-api-3.3.2.jar
+```
+- In the [Maven repo](https://mvnrepository.com/artifact/org.apache.hadoop/hadoop-aws/3.3.2) you can find additional dependencies under "Compile Dependencies": `aws-java-sdk-bundle` in version `1.11.1026` which needs to be downloaded as well.
 
 ## Upgrade Spark version
 
