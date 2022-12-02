@@ -26,6 +26,13 @@ Stopping Spark History Server can be done via:
 stop-history-server.sh
 ```
 
+## Receive logs from Spark History Server e.g. for getting the port
+
+After you started the Spark History Server it outputs the location of the log file, like:
+```
+tail -f $HOME/spark/logs/spark-tim-krause-org.apache.spark.deploy.history.HistoryServer-1-DGX2.out
+```
+
 ## Temporarily: Configure SparkSession to upload logs to the Spark History Server
 
 To enable the eventlogging temporarily, just add the following config in your SparkSession:

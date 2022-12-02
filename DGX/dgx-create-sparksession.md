@@ -70,7 +70,7 @@ mkdir /raid/your-user/sparktmp
 
 ## Spark History Server
 
-[here](https://github.com/KubeSoup/docs/blob/main/DGX/dgx-spark-history-server.md) is the manual for setting up and configuring the Spark History Server.
+[Here](https://github.com/KubeSoup/docs/blob/main/DGX/dgx-spark-history-server.md) is the manual for setting up and configuring the Spark History Server.
 
 ### S3 Auth
 
