@@ -13,7 +13,53 @@ This document is about metadata management for the datasets (not for trainings, 
 ## Example structure
 
 ```
+s3://opengptx/datasources_ogptx/docs/v0.1.2/
+    en/
+        bundestag/
+            metadata.json
+            (metadata_biases.json)
+            data/
+```
 
+## Example metadata 
+
+```
+{
+  "train": {
+    "word_count": {
+      "de": {
+        "bundestag": 880067683,
+        "oscar": 40113103765,
+        "paracrawl": 3198486559,
+        "newspaper_iais": 2948433594,
+        "wiki40b": 522202653,
+        "opensubtitles": 181117003,
+        "dta": 23213074,
+        "one_million_posts": 4028219
+      }
+    },
+    "en": {
+      "pile": 50171390868
+    }
+  },
+  "validation": {
+    "word_count": {
+      "de": {
+        "bundestag": 224480959,
+        "oscar": 10033553087,
+        "paracrawl": 799902282,
+        "newspaper_iais": 737217171,
+        "wiki40b": 130612178,
+        "opensubtitles": 45311523,
+        "dta": 4511067,
+        "one_million_posts": 994710
+      }
+    },
+    "en": {
+      "pile": 33475743843
+    }
+  }
+}
 ```
 
 ## Example code
