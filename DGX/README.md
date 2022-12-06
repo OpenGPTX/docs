@@ -38,7 +38,9 @@ NVMe drives
 
 ## Download s3 notebook (.ipynb)
 
-TODO Tim
+In general we downloaded a lot data from the `opengptx` S3 bucket under folder `/raid/s3/opengptx/`.
+
+For replicability you can find the according [.ipynb](https://github.com/KubeSoup/docs/blob/main/DGX/dgx-download-s3.ipynb) (only use 60 cores or less, otherwise the download fails sometimes) in this repo as well.
 
 ## Run jobs in the background
 
