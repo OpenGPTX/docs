@@ -101,10 +101,13 @@ JSON and XML belong relatively close together in this comparison but XML is olde
 Technically YAML is a superset of JSON. Which means (in theory at least), a YAML parser can understand JSON, but not necessarily the other way around.
 
 A `+` means a pro for YAML, A `-` means a pro for JSON:
-+ visually easier to look at / easy for a human to read
-+ YAML has the ability to reference other items within a YAML file using "anchors."
+
+`+` visually easier to look at / easy for a human to read
+
+`+` YAML has the ability to reference other items within a YAML file using "anchors."
 +YAML is more robust about embedding other serialization formats such as JSON or XML within a YAML file.
-- JSON is often faster and is probably still interoperable with more systems
+
+`-` JSON is often faster and is probably still interoperable with more systems
 +Duplicate keys, which are potentially valid JSON, are definitely invalid YAML.
 +Python programmers are generally big fans of YAML, because of the use of indentation, rather than bracketed syntax, to indicate levels. 
 +YAML uses space indentation, which is familiar territory for Python developers.
