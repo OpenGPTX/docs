@@ -100,34 +100,39 @@ JSON and XML belong relatively close together in this comparison but XML is olde
 
 Technically YAML is a superset of JSON. Which means (in theory at least), a YAML parser can understand JSON, but not necessarily the other way around.
 
-A `+` means a pro for YAML, A `-` means a pro for JSON:
+A `+` means a pro for YAML, A `-` means a pro for JSON found at [stackoverflow](https://stackoverflow.com/questions/1726802/what-is-the-difference-between-yaml-and-json):
 
-`+` visually easier to look at / easy for a human to read
+`+` YAML is visually easier to look at / easy for a human to read
 
-`+` YAML has the ability to reference other items within a YAML file using "anchors."
-+YAML is more robust about embedding other serialization formats such as JSON or XML within a YAML file.
+`+` Python programmers are generally big fans of YAML, because of the use of indentation, rather than bracketed syntax, to indicate levels. 
+
+`+` YAML is more robust about embedding other serialization formats such as JSON or XML within a YAML file.
 
 `-` JSON is often faster and is probably still interoperable with more systems
-+Duplicate keys, which are potentially valid JSON, are definitely invalid YAML.
-+Python programmers are generally big fans of YAML, because of the use of indentation, rather than bracketed syntax, to indicate levels. 
-+YAML uses space indentation, which is familiar territory for Python developers.
--JSON is much faster to serialize and deserialize because of significantly less features than YAML to check for, which enables smaller and lighter code to process JSON.
--YAML actually requires more characters than JSON
-+The lack of comments in JSON is, in practice, a real pain.
--YAML has widespread support, but is less ubiquitous than JSON, and each parser implements a different subset. Hence YAML files are less interoperable than you might think.
 
-It is relatively easy to convert one of those formats into the other. Be forewarned though, you will lose comments when converting a YAML document to JSON.
+`-` JSON is much faster to serialize and deserialize because of significantly less features than YAML to check for, which enables smaller and lighter code to process JSON.
 
-JSON is much faster, at the expense of some readability, and features such as comments: https://stackoverflow.com/a/62843005
+`-` YAML actually requires more characters than JSON
 
-Most of the time people will not use those extra features and the main difference is that YAML uses indentation whilst JSON uses brackets.
+`+` YAML has the ability to reference other items within a YAML file using "anchors".
 
-JSON is the winner for performance (if relevant) and interoperability. YAML is better for human-maintained files.
+`+` Duplicate keys, which are potentially valid JSON, are definitely invalid in YAML.
 
-There are a plethora of parsers that work very well in all languages for both YAML and JSON.
-Python programmers tend towards preferring YAML, JavaScript programmers towards JSON.
+`+` The lack of comments in JSON is, in practice, a real pain.
 
-**Hence the file format JSON is the best option in our context to store metadata.**
+`-` YAML has widespread support, but is less ubiquitous than JSON, and each parser implements a different subset. Hence YAML files are less interoperable than you might think.
+
+All in all:
+- Python programmers tend towards preferring YAML, JavaScript programmers towards JSON.
+- JSON is the winner for performance (if relevant) and interoperability. YAML is better for human-maintained files.
+- A good test about performance can be found in this [comment](https://stackoverflow.com/a/62843005). 
+- There are a plethora of parsers that work very well in all languages for both YAML and JSON.
+- It is relatively easy to convert one of those formats into the other. Be forewarned though, you will lose comments when converting a YAML document to JSON.
+- Most of the time people will not use those extra features and the main difference is that YAML uses indentation whilst JSON uses brackets.
+
+Since we are more in a Python context, the performance is not relevent for small metadata files and the human readibility is a key factor in metadata, YAML is a good choice. By avoiding the usage of advanced features (like comments, anchors, ...) in YAML, we ensure very good compatibility with parsing libraries and being able to easily convert into JSON if needed.
+
+**Hence the file format YAML without using advanced YAML features (to be compatible with JSON) is the best option in our context to store metadata.**
 
 ## Programming language
 
