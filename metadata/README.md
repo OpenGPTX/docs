@@ -96,11 +96,9 @@ The main disadvantage of JSON is the bad performance in comparison to the other 
 
 JSON and XML belong relatively close together in this comparison but XML is older, the files are larger and not that common nowadays anymore.
 
-### JSON vs. YAML:
+### JSON vs. YAML
 
-Technically YAML is a superset of JSON. Which means (in theory at least), a YAML parser can understand JSON, but not necessarily the other way around.
-
-A `+` means a pro for YAML, A `-` means a pro for JSON found at [stackoverflow](https://stackoverflow.com/questions/1726802/what-is-the-difference-between-yaml-and-json):
+Technically YAML is a superset of JSON. Which means (in theory at least), a YAML parser can understand JSON, but not necessarily the other way around. A `+` means a pro for YAML, A `-` means a pro for JSON found at [stackoverflow](https://stackoverflow.com/questions/1726802/what-is-the-difference-between-yaml-and-json):
 
 `+` YAML is visually easier to look at / easy for a human to read
 
@@ -130,7 +128,7 @@ All in all:
 - It is relatively easy to convert one of those formats into the other. Be forewarned though, you will lose comments when converting a YAML document to JSON.
 - Most of the time people will not use those extra features and the main difference is that YAML uses indentation whilst JSON uses brackets.
 
-Since we are more in a Python context, the performance is not relevent for small metadata files and the human readibility is a key factor in metadata, YAML is a good choice. By avoiding the usage of advanced features (like comments, anchors, ...) in YAML, we ensure very good compatibility with parsing libraries and being able to easily convert into JSON if needed.
+Since we are more in a Python context, the performance is not relevent for small metadata files and the human readibility is a key factor in metadata, YAML is prefered. By avoiding the usage of advanced features (like comments, anchors, ...) in YAML, we ensure very good compatibility with parsing libraries and being able to easily convert into JSON if needed.
 
 **Hence the file format YAML without using advanced YAML features (to be compatible with JSON) is the best option in our context to store metadata.**
 
