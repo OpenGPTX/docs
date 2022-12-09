@@ -66,12 +66,59 @@ s3://opengptx/datasources_ogptx/docs/v0.1.2/
 
 ## Example code
 
+Install dependencies:
+```
+pip install pyyaml
 ```
 
+Write YAML (pick either JSON style or YAML as you prefer):
+```
+import yaml
+
+### JSON style start
+metadata = {"train":{"word_count":{"de":{"bundestag":880067683}}},
+        "weekday":["monday","tuesday","wednesday","thursday","friday","saturday","sunday"],
+        "months":["jan","feb","mar","apr","may","june","july"]}
+### JSON style end
+
+### YAML style start
+metadatayaml = """
+train:
+  word_count:
+    de:
+      bundestag: 880067683
+weekday:
+  - monday
+  - tuesday
+  - wednesday
+  - thursday
+  - friday
+  - saturday
+  - sunday
+months:
+  - jan
+  - feb
+  - mar
+  - apr
+  - may
+  - june
+  - july
+"""
+
+metadata = yaml.safe_load(metadata_yaml)
+### YAML style end
+
+with open(r'metadata.yaml', 'w') as file:
+    yaml.dump(metadata, file)
 ```
 
+Read YAML:
+```
+with open(r'metadata.yaml', 'r') as file:
+    metadata = yaml.safe_load(file)
 
-
+print(metadata['train']['word_count']['de']['bundestag'])
+```
 
 
 ## Metadata tools
@@ -130,7 +177,7 @@ All in all:
 
 Since we are more in a Python context, the performance is not relevent for small metadata files and the human readibility is a key factor in metadata, YAML is prefered. By avoiding the usage of advanced features (like comments, anchors, ...) in YAML, we ensure very good compatibility with parsing libraries and being able to easily convert into JSON if needed.
 
-**Hence the file format YAML without using advanced YAML features (to be compatible with JSON) is the best option in our context to store metadata.**
+Hence the file format YAML without using advanced YAML features (to be compatible with JSON) is the best option in our context to store metadata.
 
 ## Programming language
 
