@@ -1,16 +1,20 @@
 
 # Metadata Management
 
-We realized everyone started creating metadata with different structure and on different locations without considering different aspects. That is why we want to collect best practices, technolgies and tools keeping our project needs in mind.
+We aleady use a lot of datasets. More and more users work with data and got a good impression about our data. Now it is time to define a metadata concept. That is why we want to collect best practices, technolgies and tools keeping our project needs in mind.
 This document is about metadata management for the datasets (not for trainings, models, ...).
 
-## In short
-
+## TODOs
 
 1. technical decision how to store metadata (pyton+json)
 2. decision where to store metadata (subfolder or so)
 3. content of metadata
 
+## In short
+
+- We want to use YAML for metadata
+- We want to read and write metadata mainly with Python
+- We want to store metadata next to the data (`metadata.json` next to the `data/` folder)
 
 ## Example structure
 
@@ -123,7 +127,13 @@ print(metadata['train']['word_count']['de']['bundestag'])
 
 ## Metadata tools
 
-Hive...
+In the Spark context, the Hive metadatastore is very often used to persist metadata. It is a central place in the organisation to get an overview about datasets in different places.
+
+In our context we are partly on AWS, IONOS and multiple HPCs which have different tech stacks. It is hard to unify them. The question is, whether a central tool produces a benefit over the additional work. 
+
+Metadata tools would need maintenance, usermanagement and would introduce dependencies on the platform and complexity for the users without having a real benefit in our context. That is the reason why we do not consider a central tool for metadata at the moment (at this point it is worth to repeat that the topic does not belong to metadata for trainings, models, ...).
+
+As a summmary: a lightweight and platform independed approach is the key.
 
 ## File format
 
