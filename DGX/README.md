@@ -49,6 +49,20 @@ In general we downloaded a lot data from the `opengptx` S3 bucket under folder `
 
 For replicability you can find the according [.ipynb](https://github.com/KubeSoup/docs/blob/main/DGX/dgx-download-s3.ipynb) (only use 60 cores or less, otherwise the download fails sometimes) in this repo as well.
 
+## Small performance test
+
+We did a small performance test just to compare the DGX node with our AWS environment. Keep in mind, it compares apples with oranges. The DGX uses local NVMe storage, has lots of RAM and a lot CPUs for only one server but on the other hand, it is only one machine - it cannot scale.
+You can find the according [.ipynb](https://github.com/KubeSoup/docs/blob/main/DGX/dgx-performance-test.ipynb) in this repo. Feel free to adjust it to your needs. The performance test is very simple: We read 10 datasets (~2TB), union (=concatenate) them, split them into train and validation in order to write the produced datasets onto NVMe storage.
+
+A rough overview about the results:
+- 128 Cores (256 Threads) 1024GB RAM: 19m
+- 128 Cores (256 Threads) 512GB RAM: 22m
+- 128 Cores (256 Threads) 128GB RAM: 36m
+- 128 Cores (256 Threads) 64GB RAM: Out of memory error
+- AWS S3 + 6 executor each 20 Cores and 120GB RAM: 50m
+
+Considering the storage locallity (NVMe disks), not having network traffic, the DGX is "just" 2-3 times faster. The AWS environment has the potential to easily scale much more.
+
 ## Run jobs in the background
 
 Some jobs need a long time to finish. Sometimes it makes sense to run it over the night or even the weekend. In order to avoid having your laptop up and running the whole time while the job is being executed, you can run it in the background with `nohup`:
