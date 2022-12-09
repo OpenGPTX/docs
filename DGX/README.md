@@ -8,6 +8,13 @@ AT (Alexander Thamm GmbH) is responsible to onboard OpenGPT-X users. Please prov
 - Your name
 - Your email
 - Your public ssh-key (preferred via GitHub url)
+```
+# In case you dont have an ssh key pair already, you can simply create one with:
+ssh-keygen -t ed25519 # uses secure elliptical keys
+
+# By default it creates ~/.ssh/id_ed25519 (it is the private key you need to auth against the DGX) 
+and ~/.ssh/id_ed25519.pub (<== this public key you need to provide us)
+```
 
 You will get a start-password which needs to be changed automatically with the first login. Please use a secure password!
 
