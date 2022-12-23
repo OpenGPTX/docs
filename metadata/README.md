@@ -6,15 +6,38 @@ This document is about metadata management for the datasets (not for trainings, 
 
 ## TODOs
 
-1. technical decision how to store metadata (pyton+json)
-2. decision where to store metadata (subfolder or so)
-3. content of metadata
+1. Technical decision how to store metadata (python + YAML)
+2. Decision where to store metadata (folders tructure)
+3. Content of metadata
+4. Row-based metadata
+5. Metdata from experiments and models
 
 ## In short
 
 - We want to use YAML for metadata
 - We want to read and write metadata mainly with Python
-- We want to store metadata next to the data (`metadata.json` next to the `data/` folder)
+- We want to store metadata next to the data (`metadata.yaml` next to the `data/` folder)
+
+## General metadata content TODO
+
+Overlap is possible!
+
+- general metadata to understand what's in the dataset
+- intermediate corpus-level metadata from calculationa (to avoid long repeating pipeline steps)
+- quality metrics
+- versioning / tracibility - when, who and what was done on the dataset
+
+## Specific metadata content TODO
+
+word_count
+word_token_count
+tokenizer
+language
+source
+amount_of_source
+quality_metrics
+      deduplicated: true|false
+
 
 ## Example structure
 
@@ -22,8 +45,8 @@ This document is about metadata management for the datasets (not for trainings, 
 s3://opengptx/datasources_ogptx/docs/v0.1.2/
     en/
         bundestag/
-            metadata.json
-            (metadata_biases.json)
+            metadata.yaml
+            (metadata_biases.yaml)
             data/
 ```
 
@@ -215,3 +238,62 @@ Metadata should be next to the data itself and should bringt a good overview abo
 ### Introduce feedback loops
 
 Based on new learnings and experience (feedback from data users and data owners), the metdadata management can be improved and extended. E.g. we can add more metdadata or we can improve the code to generate the metdata.
+
+
+
+
+
+
+
+
+# Row-level metadata
+
+Row-level metadata is not comparable to corpus-based metadata. No matter how big the dataset is, the amount of corpus-based metadata is relatively smiliar between the datasets. Whereas row-level metadata scales quite linear to the size of the dataset. The more rows you have, the more metadata you need to store. That is why we need to consider scalability and distribution. It is a big data topic.
+
+## Storing row-based metadata in separated dataset? Join
+
+Joins and shuffles are extremely resource heavy and often lead to out of memory exceptions when having big datasets. That is why we should avoid storing metadata in a separate dataset with a unique id as join condition.
+
+Storing the metadata in the same dataset like the original data, sounds inefficient but after reading the next sections and understanding the technological features, the benefits will be clear.
+
+## Parquet
+
+The following picture shows the difference between columnar- and row-based layout. Due to columnar encoded chunks, parquet can read specific columns and can ignore (so it does not read) other columns. This makes clear, having lots of additional columns for metadata does not impact the reading part when not using them:
+
+![Column layout and row layout](.images/column-row-layout.png)
+
+To go more into the details of the structure of parquet files, the following picture is a very good overview. A Parquet file consists of one or more Row Groups, a Row Group consists of one data chunk for every column following each other, and every data chunk consists one or more Pages with the column data. This means a single Row Group contains data for all columns for some number of rows, and if we look at the content of a Row Group, first we will see the data for the first column, then the data for the second column and so on. If you need to read a single column from a Parquet file, you have to read the corresponding column chunks from all Row Groups, but you do not need to read the full content of all Row Groups. All in all from a deeper perspective it is clear that the partial read is very efficient:
+
+![image info](.images/parquet-strucure.png)
+
+If it helps, here is another layout of parquet. It also indicates additional metadata on row-group-level which can make reading even more efficient when using special queries (but this is more magic in the background):
+
+![image info](.images/parquet-structure-detailed.png)
+
+As the last point it is worth to mention that parquet can be partitioned on .parquet file level. In the following picture it is partioned on year+month and if you select a query e.g. on januar 2018, it is intelligent enough just to read the according .parquet file without reading the rest. Think about doing a partitioning e.g. on language level like en and de:
+
+![image info](.images/parquet-partitioning.png)
+
+
+## Delta architecture
+
+The delta architecture is based on having multiple buckets (can be also folders in one bucket) which are often called bronze, silver and gold where the data quality improves from one bucket to the other bucket.
+
+- bronze: raw data (in the correct format that the tools can efficiently work with, e.g. parquet with snappy compression) - it is always good to have the raw data if somebody wants to start at this point from scratch
+- silver: its filtered, cleaned, augmented data (multiple silver buckets in different qualities/steps are possible if needed)
+- gold: business-level aggregations - can be directly consumed by apps or to train a model
+
+## Implementations plan / steps
+
+1. delta architecture (bronze) rename datasources_ogptx/docs/ rename datasources_ogptx/raw/
+2. delta architecture (silver) datasources_ogptx/raw_with_metadata/ => combine (3) versions into 1 version. the solution can look like:
+```
++-----------+--------------------+-------------------+----------------+---------------+---------------+-----------------------+---------------+-----------------+
+|    uniq_id|                text|__null_dask_index__|mean_word_length|total_num_words|total_num_sents|non_alphabetwords_ratio|stop_word_count|lexical_diversity|
++-----------+--------------------+-------------------+----------------+---------------+---------------+-----------------------+---------------+-----------------+
+|25769803776|Deutscher Bundest...|                  0|            6.24|         5235.0|          241.0|                   0.06|         1933.0|             0.34|
+|25769803777|Deutscher Bundest...|                  1|            6.24|         5235.0|          241.0|                   0.06|         1933.0|             0.34|
+...
+```
+3. metadata creating pile failed? no spark native functions used?
+4. introduce partitioning
