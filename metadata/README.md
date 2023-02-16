@@ -4,14 +4,6 @@
 We aleady use a lot of datasets. More and more users work with data and got a good impression about our data. Now it is time to define a metadata concept. That is why we want to collect best practices, technolgies and tools keeping our project needs in mind.
 This document is about metadata management for the datasets (not for trainings, models, ...).
 
-## TODOs
-
-1. Technical decision how to store metadata (python + YAML)
-2. Decision where to store metadata (folders tructure)
-3. Content of metadata
-4. Row-based metadata
-5. Metadata from experiments and models
-
 ## In short
 
 - We want to use YAML for metadata
@@ -22,10 +14,10 @@ This document is about metadata management for the datasets (not for trainings, 
 
 Overlap is possible!
 
-- general metadata to understand what's in the dataset
-- intermediate corpus-level metadata from calculation (to avoid long repeating pipeline steps)
-- quality metrics
-- versioning / tracibility - when, who and what was done on the dataset
+- General metadata to understand what's in the dataset
+- Intermediate corpus-level metadata from calculation (to avoid long repeating pipeline steps)
+- Quality metrics
+- Versioning / tracibility - when, who and what was done on the dataset
 
 ## Specific metadata content
 
@@ -148,7 +140,7 @@ print(metadata['train']['word_count']['de']['bundestag'])
 
 In the Spark context, the Hive metadatastore is very often used to persist metadata. It is a central place in the organisation to get an overview about datasets in different places.
 
-In our context we are partly on AWS, IONOS and multiple HPCs which have different tech stacks. It is hard to unify them. The question is, whether a central tool produces a benefit over the additional work. 
+In our context we are partly on AWS, IONOS and multiple HPCs which have different tech stacks. It is hard to unify them. The question is, whether a central tool produces a benefit over the additional effort. 
 
 Metadata tools would need maintenance, usermanagement and would introduce dependencies on the platform and complexity for the users without having a real benefit in our context. That is the reason why we do not consider a central tool for metadata at the moment (at this point it is worth to repeat that the topic does not belong to metadata for trainings, models, ...).
 
@@ -229,7 +221,7 @@ In this section are some important principles and thoughts about "Data Mesh". Th
 
 ### Enable Autonomous Teams to Get Value from Data
 
-Metadata should be next to the data itself and should bringt a good overview about the content of the data.
+Metadata should be next to the data itself and should bring a good overview about the content of the data.
 
 ### Introduce feedback loops
 
@@ -266,7 +258,7 @@ If it helps, here is another layout of parquet. It also indicates additional met
 
 ![image info](.images/parquet-structure-detailed.png)
 
-As the last point it is worth to mention that parquet can be partitioned on .parquet file level. In the following picture it is partioned on year+month and if you select a query e.g. on januar 2018, it is intelligent enough just to read the according .parquet file without reading the rest. Think about doing a partitioning e.g. on language level like en and de:
+As the last point it is worth to mention that parquet can be partitioned on .parquet file level. In the following picture it is partioned on year+month and if you select a query e.g. on januar 2018, it is intelligent enough just to read the according .parquet file without reading the rest. Think about doing a partitioning e.g. on language level like "en" and "de":
 
 ![image info](.images/parquet-partitioning.png)
 
