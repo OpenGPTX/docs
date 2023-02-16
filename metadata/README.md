@@ -10,7 +10,7 @@ This document is about metadata management for the datasets (not for trainings, 
 2. Decision where to store metadata (folders tructure)
 3. Content of metadata
 4. Row-based metadata
-5. Metdata from experiments and models
+5. Metadata from experiments and models
 
 ## In short
 
@@ -18,26 +18,22 @@ This document is about metadata management for the datasets (not for trainings, 
 - We want to read and write metadata mainly with Python
 - We want to store metadata next to the data (`metadata.yaml` next to the `data/` folder)
 
-## General metadata content TODO
+## General metadata content
 
 Overlap is possible!
 
 - general metadata to understand what's in the dataset
-- intermediate corpus-level metadata from calculationa (to avoid long repeating pipeline steps)
+- intermediate corpus-level metadata from calculation (to avoid long repeating pipeline steps)
 - quality metrics
 - versioning / tracibility - when, who and what was done on the dataset
 
-## Specific metadata content TODO
+## Specific metadata content
 
-word_count
-word_token_count
-tokenizer
-language
-source
-amount_of_source
-quality_metrics
-      deduplicated: true|false
+AP2 already prepared a lot metadata content and grouped it in a table:
 
+![image info](.images/AP2-metadata-grouping.png)
+
+This is a perfect foundation and can be adjusted and enhanced later on.
 
 ## Example structure
 
@@ -283,10 +279,10 @@ The delta architecture is based on having multiple buckets (can be also folders 
 - silver: its filtered, cleaned, augmented data (multiple silver buckets in different qualities/steps are possible if needed)
 - gold: business-level aggregations - can be directly consumed by apps or to train a model
 
-## Implementations plan / steps
+## Implementation plan / steps
 
-1. delta architecture (bronze) rename datasources_ogptx/docs/ rename datasources_ogptx/raw/
-2. delta architecture (silver) datasources_ogptx/raw_with_metadata/ => combine (3) versions into 1 version. the solution can look like:
+1. Delta architecture (bronze) rename datasources_ogptx/docs/ rename datasources_ogptx/raw/
+2. Delta architecture (silver) datasources_ogptx/raw_with_metadata/ => combine (3) versions into 1 version. the solution can look like:
 ```
 +-----------+--------------------+-------------------+----------------+---------------+---------------+-----------------------+---------------+-----------------+
 |    uniq_id|                text|__null_dask_index__|mean_word_length|total_num_words|total_num_sents|non_alphabetwords_ratio|stop_word_count|lexical_diversity|
@@ -295,5 +291,5 @@ The delta architecture is based on having multiple buckets (can be also folders 
 |25769803777|Deutscher Bundest...|                  1|            6.24|         5235.0|          241.0|                   0.06|         1933.0|             0.34|
 ...
 ```
-3. metadata creating pile failed? no spark native functions used?
-4. introduce partitioning
+3. Metadata creating pile failed? no spark native functions used?
+4. Introduce partitioning
