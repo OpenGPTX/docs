@@ -23,12 +23,12 @@ The whole USM (user management) is fully automated with Ansible in our [dgx-setu
 ## Recommended order of documentation
 
 Of course, you can pick the documentation you need, but we recommend the following order:
-1. [Vscode remote-ssh development](https://github.com/KubeSoup/docs/blob/main/DGX/dgx-vscode-remote-ssh.md)
-2. [Install Spark on DGX](https://github.com/KubeSoup/docs/blob/main/DGX/dgx-install-spark.md)
-3. [Create a SparkSession on DGX](https://github.com/KubeSoup/docs/blob/main/DGX/dgx-create-sparksession.md)
-4. [Spark-rapids: Spark with GPU on DGX](https://github.com/KubeSoup/docs/blob/main/DGX/dgx-spark-rapids-gpu.md)
-5. [Spark History Server](https://github.com/KubeSoup/docs/blob/main/DGX/dgx-spark-history-server.md)
-
+1. [Vscode remote-ssh development](./dgx-vscode-remote-ssh.md)
+2. [Install Spark on DGX](./dgx-install-spark.md)
+3. [Create a SparkSession on DGX](./dgx-create-sparksession.md)
+4. [Spark-rapids: Spark with GPU on DGX](./dgx-spark-rapids-gpu.md)
+5. [Spark History Server](./dgx-spark-history-server.md)
+6. [Install Additional Software](./dgx-install-additional-software.md)
 
 ## DGX Hardware
 
