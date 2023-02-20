@@ -63,6 +63,36 @@ hadoop-client-api-3.3.2.jar
 ```
 - In the [Maven repo](https://mvnrepository.com/artifact/org.apache.hadoop/hadoop-aws/3.3.2) you can find additional dependencies under "Compile Dependencies": `aws-java-sdk-bundle` in version `1.11.1026` which needs to be downloaded as well.
 
+#### Install SparkNLP
+
+To work with SparkNLP package, you will need to install the required python package version and the corresponding fat jar (fat jar here means, it comes with all the required java dependencies for SparkNLP)
+
+- Check for SparkNLP releases on github [here](https://github.com/JohnSnowLabs/spark-nlp/releases/).
+
+- Remove previous SparkNLP jars
+```bash
+rm $HOME/spark/jars/spark-nlp*
+```
+
+- Update the SparkNLP version and export it to install the SparkNLP fat jar
+```bash
+export SPARKNLP_VERSION=4.3.0
+wget "https://s3.amazonaws.com/auxdata.johnsnowlabs.com/public/jars/spark-nlp-assembly-${SPARKNLP_VERSION}.jar" -O $HOME/spark/jars/spark-nlp-assembly-${SPARKNLP_VERSION}.jar
+```
+
+- To check the installation
+```
+$ ls $HOME/spark/jars | grep spark-nlp
+spark-nlp-assembly-4.3.0.jar
+```
+
+- Install the Python version
+```
+pip install spark-nlp==4.3.0
+```
+
+- Note: Check the Python, Spark, and Java/Scala compatability of the SparkNLP version from [here](https://github.com/JohnSnowLabs/spark-nlp#scala-and-python-support) and [here](https://github.com/JohnSnowLabs/spark-nlp#apache-spark-support) when updating the Python, Java or Spark
+
 ## Upgrade Spark version
 
 - Here we assume you already have Spark version 3.2.2 installed and it needs to be upgraded to version 3.3.0
