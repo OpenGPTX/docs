@@ -16,7 +16,7 @@ You can use it for running python, model training, Spark and more on powerful ha
 
 ## Set up everyting
 
-#TODO: How do I know my user name?
+Your username will be provided by the DGX admins.
 
 - Create an ssh config to make it more convinient:
 ```
