@@ -36,7 +36,7 @@ source ~/.profile
 ```
 python3 -m venv venv
 source venv/bin/activate
-pip install --user pyspark==3.3.0
+pip install pyspark==3.3.0
 ```
 - Test/verify:
 ```
@@ -119,7 +119,7 @@ mv spark-3.3.0-bin-hadoop3 $HOME/spark
 ```
 python3 -m venv venv
 source venv/bin/activate
-pip install --user pyspark==3.3.0
+pip install pyspark==3.3.0
 ```
 - Test/verify:
 ```
