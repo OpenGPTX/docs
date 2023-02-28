@@ -20,6 +20,7 @@ Documentation for platform users
 
 -   [Setup](./notebooks/applications/spark/README.md)
 -   [Example Notebooks](./notebooks/applications/spark/notebooks/)
+-   [Running Spark on JUWELS HPC](./spark-juwels/README.md)
 
 ## Pipelines
 
