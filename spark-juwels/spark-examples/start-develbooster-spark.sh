@@ -14,6 +14,7 @@
 source ./spark_env/activate.sh
 
 JOB="$SLURM_JOB_NAME-$SLURM_JOB_ID"
+mkdir -p $SLURM_SUBMIT_DIR/spark-history
 export SPARK_WORKER_DIR="$SLURM_SUBMIT_DIR/spark-history/$JOB/worker"
 export SPARK_LOG_DIR="$SLURM_SUBMIT_DIR/spark-history/$JOB/log"
 export SPARK_CONF_DIR=$SLURM_SUBMIT_DIR
@@ -39,7 +40,7 @@ echo "------------ Starting Spark Server -------------"
 echo "MASTER_URL: $MASTER_URL"
 echo "------------------------------------------------"
 start-master.sh
-#start-history-server.sh
+start-history-server.sh
 
 
 export SPARK_NO_DAEMONIZE=1
