@@ -95,7 +95,7 @@ spark.history.provider             	org.apache.spark.deploy.history.FsHistoryPro
 spark.history.retainedApplications 	100
 spark.history.fs.update.interval   	10s
 spark.eventLog.enabled          	true
-spark.eventLog.dir              	file:///path/to/spark-history
-spark.history.fs.logDirectory   	file:///path/to/spark-history
+spark.eventLog.dir              	file:///path/to/local/spark-history
+spark.history.fs.logDirectory   	file:///path/to/local/spark-history
 #spark.io.compression.codec		snappy
 ```
