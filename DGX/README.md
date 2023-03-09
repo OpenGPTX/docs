@@ -29,6 +29,7 @@ Of course, you can pick the documentation you need, but we recommend the followi
 4. [Spark-rapids: Spark with GPU on DGX](./dgx-spark-rapids-gpu.md)
 5. [Spark History Server](./dgx-spark-history-server.md)
 6. [Install Additional Software](./dgx-install-additional-software.md)
+7. [Best Practices on DGX](./dgx-best-practices.md)
 
 ## DGX Hardware
 
