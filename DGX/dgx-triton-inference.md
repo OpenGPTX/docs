@@ -59,6 +59,7 @@ docker run --gpus=1 --rm -p 8000:8000 -p 8001:8001 -p 8002:8002 -v /home/tim-kra
 ```
 
 To verifiy that the Triton server is up and running, be sure it gives a `200` back:
+
 ```
 curl -v localhost:8000/v2/health/ready
 
