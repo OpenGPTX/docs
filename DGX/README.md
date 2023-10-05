@@ -4,11 +4,14 @@ This page of documentation is the entrypoint of our DGX doc. Here you can find u
 
 ## Gettings access on DGX
 
-AT (Alexander Thamm GmbH) is responsible to onboard OpenGPT-X users. Please provide us:
+Fraunhofer IAIS is currently responsible to onboard OpenGPT-X users. Please provide us:
 - Your name
 - Your email
 - Your public ssh-key (preferred via GitHub url)
+
+Please provide them to `Tobias Elvermann` or `Hammam Abdelwahab` via Slack (or Teams).
 ```
+
 # In case you dont have an ssh key pair already, you can simply create one with:
 ssh-keygen -t ed25519 # uses secure elliptical keys
 
